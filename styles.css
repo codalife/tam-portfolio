@@ -482,27 +482,34 @@ h1, h2, h3, h4 {
 .rotating-text {
     position: relative;
     height: 1.5em;
-    overflow: hidden;
-    display: inline-flex;
-    flex-direction: column;
+    display: inline-block;
+    vertical-align: baseline;
+    margin-top: 0.3em;
 }
 
 .rotating-text span {
-    display: block;
-    animation: rotate-words 4s infinite;
+    position: absolute;
+    left: 0;
+    top: 0;
+    white-space: nowrap;
+    animation: rotate-words 6s infinite;
     background: var(--gradient-1);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
 }
 
-.rotating-text span:nth-child(2) { animation-delay: -3s; }
-.rotating-text span:nth-child(3) { animation-delay: -2s; }
-.rotating-text span:nth-child(4) { animation-delay: -1s; }
+.rotating-text span:nth-child(2) {
+    animation-delay: -3s;
+    background: linear-gradient(135deg, #6366f1 0%, #a78bfa 40%, #e879f9 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
 
 @keyframes rotate-words {
-    0%, 20% { transform: translateY(0); opacity: 1; }
-    25%, 95% { transform: translateY(-100%); opacity: 0; }
+    0%, 45% { transform: translateY(0); opacity: 1; }
+    50%, 95% { transform: translateY(-100%); opacity: 0; }
     100% { transform: translateY(0); opacity: 1; }
 }
 
