@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agentic AI | Tam Tran</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* ===== Claude Code & Codex Section Styles ===== */
+        .tool-section {
+            padding: 5rem 0;
+            border-top: 1px solid rgba(100, 116, 139, 0.1);
+        }
+        .tool-header {
+            display: flex;
+            align-items: center;
+            gap: 1.25rem;
+            margin-bottom: 2rem;
+        }
+        .tool-logo {
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--white);
+            flex-shrink: 0;
+        }
+        .tool-logo.claude-code {
+            background: linear-gradient(135deg, #d97706 0%, #f59e0b 100%);
+        }
+        .tool-logo.codex {
+            background: linear-gradient(135deg, #10a37f 0%, #1a7f5a 100%);
+        }
+        .tool-header h2 {
+            font-size: 2rem;
+            color: var(--white);
+            margin: 0;
+        }
+        .tool-header h2 span {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 400;
+            margin-top: 0.25rem;
+            font-family: 'Inter', sans-serif;
+        }
+        .tool-description {
+            color: var(--gray);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            font-size: 1.05rem;
+        }
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+        .feature-card {
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        .feature-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            transform: translateY(-4px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+        .feature-card h4 {
+            color: var(--white);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+        .feature-card p {
+            color: var(--gray);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+        .built-with {
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: rgba(99, 102, 241, 0.08);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 12px;
+        }
+        .built-with h4 {
+            color: var(--primary-light);
+            margin-bottom: 0.75rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .built-with p {
+            color: var(--gray-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ===== App Integration Section ===== */
+        .app-integration-section {
+            padding: 5rem 0 2rem;
+        }
+        .integration-intro {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        .integration-intro h2 {
+            font-size: 2rem;
+            color: var(--white);
+            margin-bottom: 1rem;
+        }
+        .integration-intro p {
+            color: var(--gray);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        /* Integration Hub Container */
+        .hub-container {
+            display: flex;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            height: 700px;
+            background: #0f172a;
+            position: relative;
+        }
+
+        /* Graph area */
+        .hub-graph {
+            flex: 1;
+            position: relative;
+            overflow: hidden;
+            background: #0f172a;
+        }
+        .hub-graph::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background-image:
+                radial-gradient(circle at 1px 1px, rgba(100, 116, 139, 0.08) 1px, transparent 0);
+            background-size: 32px 32px;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .hub-grid-overlay { display: none; }
+        #graph {
+            width: 100%;
+            height: 100%;
+            background: transparent;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Side Panel */
+        .hub-panel {
+            width: 360px;
+            background: rgba(15, 23, 42, 0.95);
+            border-left: 1px solid rgba(100, 116, 139, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+        .hub-panel-header {
+            padding: 20px 24px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+        }
+        .hub-panel-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 4px;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+        .hub-panel-subtitle {
+            font-size: 13px;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+        .hub-selection-area {
+            padding: 16px 24px;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+            background: rgba(15, 23, 42, 0.5);
+        }
+        .hub-selection-label {
+            font-size: 11px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .hub-selected-apps {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            min-height: 32px;
+            align-items: center;
+        }
+        .hub-selected-app {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 10px;
+            background: var(--primary);
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 500;
+            color: white;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .hub-selected-app:hover {
+            background: var(--primary-dark);
+        }
+        .hub-selected-app .remove {
+            width: 14px;
+            height: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 3px;
+            font-size: 9px;
+            margin-left: 2px;
+        }
+        .hub-placeholder {
+            color: var(--gray);
+            font-size: 13px;
+        }
+        .hub-clear-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 6px;
+            color: var(--gray);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            margin-top: 10px;
+        }
+        .hub-clear-btn:hover {
+            background: rgba(99, 102, 241, 0.15);
+            border-color: var(--primary-light);
+            color: var(--primary-light);
+        }
+        .hub-results {
+            flex: 1;
+            overflow-y: auto;
+            padding: 16px 24px;
+        }
+        .hub-integration-card {
+            background: rgba(15, 23, 42, 0.5);
+            border-radius: 10px;
+            padding: 16px;
+            margin-bottom: 10px;
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            transition: all 0.3s ease;
+        }
+        .hub-integration-card:hover {
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
+        }
+        .hub-ai-badge {
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+        .hub-ai-badge.chatgpt {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        .hub-ai-badge.claude {
+            background: rgba(245, 158, 11, 0.15);
+            color: #fbbf24;
+        }
+        .hub-ai-badge.gemini {
+            background: rgba(99, 102, 241, 0.15);
+            color: var(--primary-light);
+        }
+        .hub-int-title {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--white);
+            margin-bottom: 6px;
+        }
+        .hub-int-desc {
+            font-size: 12px;
+            color: var(--gray);
+            line-height: 1.6;
+            margin-bottom: 10px;
+        }
+        .hub-int-flow {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 10px;
+            background: rgba(15, 23, 42, 0.8);
+            border-radius: 6px;
+            font-size: 11px;
+            overflow-x: auto;
+        }
+        .hub-flow-step {
+            padding: 4px 8px;
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 4px;
+            white-space: nowrap;
+            font-weight: 500;
+            color: var(--gray-light);
+            border: 1px solid rgba(100, 116, 139, 0.2);
+        }
+        .hub-flow-arrow {
+            color: var(--gray);
+            font-size: 10px;
+        }
+        .hub-empty-state {
+            text-align: center;
+            padding: 50px 20px;
+        }
+        .hub-empty-icon {
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.2), rgba(139, 92, 246, 0.2));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 22px;
+            animation: emptyPulse 3s ease-in-out infinite;
+        }
+        @keyframes emptyPulse {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.15); }
+            50% { box-shadow: 0 0 20px 8px rgba(99, 102, 241, 0.1); }
+        }
+        .hub-empty-title {
+            font-size: 15px;
+            font-weight: 600;
+            color: var(--white);
+            margin-bottom: 8px;
+        }
+        .hub-empty-text {
+            font-size: 13px;
+            line-height: 1.6;
+            color: var(--gray);
+            max-width: 250px;
+            margin: 0 auto;
+        }
+
+        /* Graph Legend */
+        .hub-legend {
+            position: absolute;
+            bottom: 16px;
+            left: 16px;
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 10px;
+            padding: 14px 18px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            z-index: 10;
+        }
+        .hub-legend-title {
+            font-size: 10px;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 10px;
+            font-weight: 500;
+        }
+        .hub-legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .hub-legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 11px;
+            color: var(--gray-light);
+            font-weight: 450;
+        }
+        .hub-legend-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* Hub instructions */
+        .hub-instructions {
+            position: absolute;
+            bottom: 16px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.9);
+            border-radius: 8px;
+            padding: 8px 16px;
+            border: 1px solid rgba(100, 116, 139, 0.2);
+            font-size: 12px;
+            color: var(--gray);
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .hub-instructions span {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .hub-key {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2px 6px;
+            background: var(--primary);
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 500;
+            color: white;
+        }
+
+        /* SVG node styles */
+        .node { cursor: pointer; }
+        .node-label {
+            font-family: 'Inter', sans-serif;
+            font-size: 10px;
+            text-anchor: middle;
+            pointer-events: none;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            fill: #94a3b8;
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+        }
+        .node:hover .node-label {
+            font-size: 12px;
+            font-weight: 600;
+            fill: #FFFFFF;
+        }
+        .node.selected .node-label {
+            font-size: 12px;
+            font-weight: 700;
+            fill: #FFFFFF;
+        }
+        .link {
+            fill: none;
+            stroke-linecap: round;
+            transition: stroke-opacity 0.3s ease, stroke-width 0.3s ease;
+        }
+        .link.highlighted {
+            stroke: var(--primary-light);
+            stroke-width: 2;
+            stroke-opacity: 0.9;
+            stroke-dasharray: none;
+        }
+        .link.ai-connection {
+            stroke: #4A5568;
+            stroke-width: 1;
+            stroke-opacity: 0.4;
+            stroke-dasharray: 3 6;
+        }
+        .link.category-connection {
+            stroke: #4A5568;
+            stroke-width: 1;
+            stroke-opacity: 0.5;
+            stroke-dasharray: 8 4;
+        }
+
+        /* Hub scrollbar */
+        .hub-results::-webkit-scrollbar { width: 5px; }
+        .hub-results::-webkit-scrollbar-track { background: transparent; }
+        .hub-results::-webkit-scrollbar-thumb { background: rgba(100, 116, 139, 0.3); border-radius: 3px; }
+        .hub-results::-webkit-scrollbar-thumb:hover { background: rgba(100, 116, 139, 0.5); }
+
+        /* Stats bar */
+        .hub-stats {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+        .hub-stat {
+            text-align: center;
+        }
+        .hub-stat-value {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .hub-stat-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.25rem;
+        }
+
+        @media (max-width: 968px) {
+            .hub-container {
+                flex-direction: column;
+                height: auto;
+            }
+            .hub-graph {
+                height: 500px;
+            }
+            .hub-panel {
+                width: 100%;
+                max-height: 400px;
+            }
+            .hub-legend { display: none; }
+            .hub-instructions { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+                        <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="agentic-ai.html" class="active">Agentic AI</a></li>
+                <li><a href="tax-tech.html">Tax Technology</a></li>
+                <li><a href="finance-tech.html">Finance Technology</a></li>
+                <li><a href="my-apps.html">My Apps</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="particles" id="particles"></div>
+        <div class="container" style="text-align: center;">
+            <h1 class="animate-slide-up">Agentic AI</h1>
+            <p class="lead animate-slide-up delay-1" style="margin-left: auto; margin-right: auto;">Put AI agents to work across your enterprise tools</p>
+        </div>
+    </header>
+
+    <!-- ===== APP INTEGRATION SECTION ===== -->
+    <section class="tool-section" id="app-integration-section" style="border-top: none;">
+        <div class="container">
+            <div class="tool-header">
+                <div class="tool-logo" style="background: linear-gradient(135deg, #6366f1, #8b5cf6);">
+                    <i class="fa-solid fa-plug"></i>
+                </div>
+                <h2>Apps Integration <span>AI-powered workflows for Tax & Finance</span></h2>
+            </div>
+            <p class="tool-description">
+                We now have access to the most powerful LLM models available. By adding an agentic layer on top — with industry-specific context and task-specific instructions — we can put these models to real work. A practical first step is integrating the applications your team already uses. Give AI access to your existing tools, and it can handle anything from repetitive tasks to complex analysis. I'm actively building integration guides for common Tax and Finance apps — <span style="color: var(--primary-light);">stay tuned as I continue updating them</span>.
+            </p>
+
+            <div class="hub-container">
+                <div class="hub-graph">
+                    <div class="hub-grid-overlay"></div>
+                    <svg id="graph"></svg>
+                    <div class="hub-instructions">
+                        <span><span class="hub-key">Click</span> Select nodes</span>
+                        <span><span class="hub-key">Drag</span> Move nodes</span>
+                    </div>
+                </div>
+
+                <div class="hub-panel">
+                    <div class="hub-results" id="integrationResults">
+                        <div class="hub-empty-state">
+                            <div class="hub-empty-icon">🔗</div>
+                            <div class="hub-empty-title">Discover Integrations</div>
+                            <div class="hub-empty-text">Select at least 2 applications to see how AI can automate workflows between them.</div>
+                        </div>
+                    </div>
+                    <div class="hub-selection-area">
+                        <div class="hub-selected-apps" id="selectedApps"></div>
+                        <button class="hub-clear-btn" id="clearBtn" style="display: none;">Clear selection</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ===== CODEX / CLAUDE CODE SECTION ===== -->
+    <section class="tool-section" id="coding-agents-section" style="background: var(--dark-lighter);">
+        <div class="container">
+            <div class="tool-header">
+                <div class="tool-logo" style="background: linear-gradient(135deg, #10a37f, #d97706);">
+                    <i class="fa-solid fa-terminal"></i>
+                </div>
+                <h2>Codex / Claude Code <span>Autonomous coding agents</span></h2>
+            </div>
+            <p class="tool-description" style="margin-bottom: 2.5rem;">
+                Coding agents aren't just for engineers anymore. These tools let anyone give instructions in plain language and have AI handle the technical execution — from running terminal commands to editing files and building workflows. Engineers spend less time on repetitive coding tasks, while non-coders gain access to capabilities that previously required a developer. As natural language becomes the interface for technical work, the teams that adopt these tools early will move faster.
+            </p>
+
+            <div class="agent-usecases-board" id="agentBoard">
+                <div class="agent-usecases-label">What can your team do with coding agents?</div>
+                <div class="agent-stage" id="agentStage"></div>
+            </div>
+        </div>
+    </section>
+
+    <style>
+        .agent-usecases-board {
+            background: linear-gradient(160deg, rgba(10, 15, 30, 0.95) 0%, rgba(20, 28, 50, 0.9) 50%, rgba(10, 15, 30, 0.95) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.15);
+            border-radius: 20px;
+            padding: 2.5rem 2rem;
+            margin-top: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .agent-usecases-board::before {
+            content: '';
+            position: absolute;
+            top: -50%; left: -50%; width: 200%; height: 200%;
+            background:
+                radial-gradient(ellipse at 20% 50%, rgba(99, 102, 241, 0.12) 0%, transparent 45%),
+                radial-gradient(ellipse at 80% 30%, rgba(236, 72, 153, 0.09) 0%, transparent 45%),
+                radial-gradient(ellipse at 50% 80%, rgba(16, 185, 129, 0.09) 0%, transparent 45%);
+            animation: bgShift 12s ease-in-out infinite;
+            pointer-events: none;
+        }
+        @keyframes bgShift {
+            0%, 100% { transform: translate(0, 0); }
+            33% { transform: translate(3%, -2%); }
+            66% { transform: translate(-2%, 3%); }
+        }
+        .agent-usecases-label {
+            color: var(--gray);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        .agent-stage {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            min-height: 120px;
+            flex-wrap: wrap;
+            position: relative;
+        }
+        .agent-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 50px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            position: absolute;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: none;
+        }
+        .agent-tag i {
+            font-size: 0.85rem;
+        }
+        .agent-tag.entering {
+            animation: tagFloatIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+            pointer-events: auto;
+        }
+        .agent-tag.visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            pointer-events: auto;
+            animation: tagFloat 3s ease-in-out infinite;
+        }
+        .agent-tag.exiting {
+            animation: tagFloatOut 0.4s cubic-bezier(0.55, 0, 1, 0.45) forwards;
+            pointer-events: none;
+        }
+        @keyframes tagFloatIn {
+            0% { opacity: 0; transform: translateY(30px) scale(0.6); filter: blur(8px); }
+            60% { opacity: 1; filter: blur(0); }
+            100% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes tagFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        @keyframes tagFloatOut {
+            0% { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+            100% { opacity: 0; transform: translateY(-25px) scale(0.7); filter: blur(6px); }
+        }
+    </style>
+
+    <script>
+        (function() {
+            const usecases = [
+                { icon: 'fa-solid fa-file-invoice', text: 'Reading invoices', color: '#6366f1', bg: 'rgba(99,102,241,0.1)', border: 'rgba(99,102,241,0.3)' },
+                { icon: 'fa-solid fa-file-pdf', text: 'Generate PDF reports', color: '#ec4899', bg: 'rgba(236,72,153,0.1)', border: 'rgba(236,72,153,0.3)' },
+                { icon: 'fa-solid fa-chart-line', text: 'Create dashboards from raw data', color: '#10b981', bg: 'rgba(16,185,129,0.1)', border: 'rgba(16,185,129,0.3)' },
+                { icon: 'fa-solid fa-rocket', text: 'Build application prototypes', color: '#f59e0b', bg: 'rgba(245,158,11,0.1)', border: 'rgba(245,158,11,0.3)' },
+                { icon: 'fa-solid fa-table', text: 'Automate spreadsheets', color: '#0ea5e9', bg: 'rgba(14,165,233,0.1)', border: 'rgba(14,165,233,0.3)' },
+                { icon: 'fa-solid fa-desktop', text: 'Generate slide decks', color: '#8b5cf6', bg: 'rgba(139,92,246,0.1)', border: 'rgba(139,92,246,0.3)' },
+                { icon: 'fa-solid fa-envelope', text: 'Send email alerts from workflows', color: '#ef4444', bg: 'rgba(239,68,68,0.1)', border: 'rgba(239,68,68,0.3)' },
+                { icon: 'fa-solid fa-scale-balanced', text: 'Research regulation updates', color: '#14b8a6', bg: 'rgba(20,184,166,0.1)', border: 'rgba(20,184,166,0.3)' },
+                { icon: 'fa-solid fa-file-lines', text: 'Write requirement documents', color: '#f97316', bg: 'rgba(249,115,22,0.1)', border: 'rgba(249,115,22,0.3)' }
+            ];
+
+            const stage = document.getElementById('agentStage');
+            const VISIBLE_COUNT = 3;
+            let currentIndex = 0;
+            let activeEls = [];
+            let started = false;
+
+            function getPositions() {
+                const w = stage.offsetWidth;
+                const h = stage.offsetHeight;
+                const positions = [
+                    { x: w * 0.12, y: h * 0.35 },
+                    { x: w * 0.42, y: h * 0.55 },
+                    { x: w * 0.72, y: h * 0.3 }
+                ];
+                return positions;
+            }
+
+            function createTag(uc, pos) {
+                const el = document.createElement('span');
+                el.className = 'agent-tag entering';
+                el.innerHTML = `<i class="${uc.icon}" style="color:${uc.color}"></i> ${uc.text}`;
+                el.style.background = uc.bg;
+                el.style.border = `1px solid ${uc.border}`;
+                el.style.color = uc.color;
+                el.style.left = pos.x + 'px';
+                el.style.top = pos.y + 'px';
+                el.style.transform = 'translateY(-50%)';
+                stage.appendChild(el);
+                // Switch to visible after enter animation
+                setTimeout(() => {
+                    el.classList.remove('entering');
+                    el.classList.add('visible');
+                }, 500);
+                return el;
+            }
+
+            function removeTag(el) {
+                el.classList.remove('visible');
+                el.classList.add('exiting');
+                setTimeout(() => {
+                    if (el.parentNode) el.parentNode.removeChild(el);
+                }, 400);
+            }
+
+
+            function showInitial() {
+                const positions = getPositions();
+                const indices = [];
+                for (let i = 0; i < VISIBLE_COUNT; i++) {
+                    const idx = (currentIndex + i) % usecases.length;
+                    indices.push(idx);
+                    setTimeout(() => {
+                        const el = createTag(usecases[idx], positions[i]);
+                        activeEls.push({ el, slot: i, idx });
+                    }, i * 200);
+                }
+                currentIndex = (currentIndex + VISIBLE_COUNT) % usecases.length;
+            }
+
+            function cycleOne() {
+                if (activeEls.length === 0) return;
+                const positions = getPositions();
+                // Pick the oldest tag to replace
+                const oldest = activeEls.shift();
+                removeTag(oldest.el);
+
+                const newIdx = currentIndex % usecases.length;
+                currentIndex = (currentIndex + 1) % usecases.length;
+
+                setTimeout(() => {
+                    const el = createTag(usecases[newIdx], positions[oldest.slot]);
+                    activeEls.push({ el, slot: oldest.slot, idx: newIdx });
+                }, 500);
+            }
+
+            // Start on scroll into view
+            const boardObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting && !started) {
+                        started = true;
+                        showInitial();
+                        setTimeout(() => {
+                            setInterval(cycleOne, 1500);
+                        }, VISIBLE_COUNT * 200 + 800);
+                        boardObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.3 });
+            boardObserver.observe(document.getElementById('agentBoard'));
+        })();
+    </script>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-contact">
+                    <div class="footer-contact-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <a href="mailto:tpminhtam@gmail.com">tpminhtam@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Floating Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.feature-card, .tool-header, .built-with, .hub-container').forEach(el => {
+            el.classList.add('scroll-animate');
+            observer.observe(el);
+        });
+
+        // ===== D3 INTEGRATION GRAPH =====
+        const categoryColors = {
+            ai: '#6366F1',
+            communication: '#3B82F6',
+            finance: '#10B981',
+            tax: '#F59E0B',
+            analytics: '#8B5CF6',
+            project: '#EC4899',
+            document: '#06B6D4',
+            compliance: '#EF4444',
+            expense: '#22C55E',
+            crm: '#F97316',
+            banking: '#0EA5E9'
+        };
+
+        const appIcons = {
+            chatgpt: { icon: 'svg-chatgpt', color: '#10A37F', svg: '<svg viewBox="0 0 24 24" width="24" height="24" fill="#10A37F"><path d="M22.282 9.821a5.985 5.985 0 0 0-.516-4.91 6.046 6.046 0 0 0-6.51-2.9A6.065 6.065 0 0 0 4.981 4.18a5.985 5.985 0 0 0-3.998 2.9 6.046 6.046 0 0 0 .743 7.097 5.98 5.98 0 0 0 .51 4.911 6.051 6.051 0 0 0 6.515 2.9A5.985 5.985 0 0 0 13.26 24a6.056 6.056 0 0 0 5.772-4.206 5.99 5.99 0 0 0 3.997-2.9 6.056 6.056 0 0 0-.747-7.073zM13.26 22.43a4.476 4.476 0 0 1-2.876-1.04l.141-.081 4.779-2.758a.795.795 0 0 0 .392-.681v-6.737l2.02 1.168a.071.071 0 0 1 .038.052v5.583a4.504 4.504 0 0 1-4.494 4.494zM3.6 18.304a4.47 4.47 0 0 1-.535-3.014l.142.085 4.783 2.759a.771.771 0 0 0 .78 0l5.843-3.369v2.332a.08.08 0 0 1-.033.062L9.74 19.95a4.5 4.5 0 0 1-6.14-1.646zM2.34 7.896a4.485 4.485 0 0 1 2.366-1.973V11.6a.766.766 0 0 0 .388.676l5.815 3.355-2.02 1.168a.076.076 0 0 1-.071 0l-4.83-2.786A4.504 4.504 0 0 1 2.34 7.872zm16.597 3.855l-5.833-3.387L15.119 7.2a.076.076 0 0 1 .071 0l4.83 2.791a4.494 4.494 0 0 1-.676 8.105v-5.678a.79.79 0 0 0-.407-.667zm2.01-3.023l-.141-.085-4.774-2.782a.776.776 0 0 0-.785 0L9.409 9.23V6.897a.066.066 0 0 1 .028-.061l4.83-2.787a4.5 4.5 0 0 1 6.68 4.66zm-12.64 4.135l-2.02-1.164a.08.08 0 0 1-.038-.057V6.075a4.5 4.5 0 0 1 7.375-3.453l-.142.08L8.704 5.46a.795.795 0 0 0-.393.681zm1.097-2.365l2.602-1.5 2.607 1.5v2.999l-2.597 1.5-2.607-1.5z"/></svg>' },
+            claude: { icon: 'svg-claude', color: '#D97706', svg: '<svg viewBox="0 0 16 16" width="24" height="24" fill="#D97706"><path d="m3.127 10.604 3.135-1.76.053-.153-.053-.085H6.11l-.525-.032-1.791-.048-1.554-.065-1.505-.08-.38-.081L0 7.832l.036-.234.32-.214.455.04 1.009.069 1.513.105 1.097.064 1.626.17h.259l.036-.105-.089-.065-.068-.064-1.566-1.062-1.695-1.121-.887-.646-.48-.327-.243-.306-.104-.67.435-.48.585.04.15.04.593.456 1.267.981 1.654 1.218.242.202.097-.068.012-.049-.109-.181-.9-1.626-.96-1.655-.428-.686-.113-.411a2 2 0 0 1-.068-.484l.496-.674L4.446 0l.662.089.279.242.411.94.666 1.48 1.033 2.014.302.597.162.553.06.17h.105v-.097l.085-1.134.157-1.392.154-1.792.052-.504.25-.605.497-.327.387.186.319.456-.045.294-.19 1.23-.37 1.93-.243 1.29h.142l.161-.16.654-.868 1.097-1.372.484-.545.565-.601.363-.287h.686l.505.751-.226.775-.707.895-.585.759-.839 1.13-.524.904.048.072.125-.012 1.897-.403 1.024-.186 1.223-.21.553.258.06.263-.218.536-1.307.323-1.533.307-2.284.54-.028.02.032.04 1.029.098.44.024h1.077l2.005.15.525.346.315.424-.053.323-.807.411-3.631-.863-.872-.218h-.12v.073l.726.71 1.331 1.202 1.667 1.55.084.383-.214.302-.226-.032-1.464-1.101-.565-.497-1.28-1.077h-.084v.113l.295.432 1.557 2.34.08.718-.112.234-.404.141-.444-.08-.911-1.28-.94-1.44-.759-1.291-.093.053-.448 4.821-.21.246-.484.186-.403-.307-.214-.496.214-.98.258-1.28.21-1.016.19-1.263.112-.42-.008-.028-.092.012-.953 1.307-1.448 1.957-1.146 1.227-.274.109-.477-.247.045-.44.266-.39 1.586-2.018.956-1.25.617-.723-.004-.105h-.036l-4.212 2.736-.75.096-.324-.302.04-.496.154-.162 1.267-.871z"/></svg>' },
+            gemini: { icon: 'svg-gemini', color: '#4285F4', svg: '<svg viewBox="0 0 65 65" width="24" height="24" fill="#4285F4"><path d="M32.447 0c.68 0 1.273.465 1.439 1.125a38.904 38.904 0 001.999 5.905c2.152 5 5.105 9.376 8.854 13.125 3.751 3.75 8.126 6.703 13.125 8.855a38.98 38.98 0 005.906 1.999c.66.166 1.124.758 1.124 1.438 0 .68-.464 1.273-1.125 1.439a38.902 38.902 0 00-5.905 1.999c-5 2.152-9.375 5.105-13.125 8.854-3.749 3.751-6.702 8.126-8.854 13.125a38.973 38.973 0 00-2 5.906 1.485 1.485 0 01-1.438 1.124c-.68 0-1.272-.464-1.438-1.125a38.913 38.913 0 00-2-5.905c-2.151-5-5.103-9.375-8.854-13.125-3.75-3.749-8.125-6.702-13.125-8.854a38.973 38.973 0 00-5.905-2A1.485 1.485 0 010 32.448c0-.68.465-1.272 1.125-1.438a38.903 38.903 0 005.905-2c5-2.151 9.376-5.104 13.125-8.854 3.75-3.749 6.703-8.125 8.855-13.125a38.972 38.972 0 001.999-5.905A1.485 1.485 0 0132.447 0z"/></svg>' },
+            gmail: { icon: 'fa-solid fa-envelope', color: '#EA4335' },
+            slack: { icon: 'fa-brands fa-slack', color: '#4A154B' },
+            teams: { icon: 'fa-brands fa-microsoft', color: '#6264A7' },
+            outlook: { icon: 'fa-brands fa-microsoft', color: '#0078D4' },
+            zoom: { icon: 'fa-solid fa-video', color: '#2D8CFF' },
+            sap: { icon: 'fa-solid fa-cubes', color: '#0FAAFF' },
+            oracle: { icon: 'fa-solid fa-database', color: '#F80000' },
+            netsuite: { icon: 'fa-solid fa-cloud', color: '#1A4F87' },
+            quickbooks: { icon: 'fa-solid fa-calculator', color: '#2CA01C' },
+            workday: { icon: 'fa-solid fa-users', color: '#F68D2E' },
+            sage: { icon: 'fa-solid fa-leaf', color: '#00D639' },
+            xero: { icon: 'fa-solid fa-x', color: '#13B5EA' },
+            dynamics: { icon: 'fa-brands fa-microsoft', color: '#002050' },
+            onesource: { icon: 'fa-solid fa-file-invoice-dollar', color: '#E55300' },
+            vertex: { icon: 'fa-solid fa-v', color: '#00A1DE' },
+            avalara: { icon: 'fa-solid fa-a', color: '#FF5722' },
+            cch: { icon: 'fa-solid fa-c', color: '#003366' },
+            bloomberg_tax: { icon: 'fa-solid fa-b', color: '#2800D7' },
+            taxjar: { icon: 'fa-solid fa-jar', color: '#48B749' },
+            sovos: { icon: 'fa-solid fa-s', color: '#00A9E0' },
+            corptax: { icon: 'fa-solid fa-building-columns', color: '#1E3A5F' },
+            longview: { icon: 'fa-solid fa-mountain', color: '#00628B' },
+            tableau: { icon: 'fa-solid fa-chart-pie', color: '#E97627' },
+            powerbi: { icon: 'fa-solid fa-chart-column', color: '#F2C811' },
+            alteryx: { icon: 'fa-solid fa-diagram-project', color: '#0078C0' },
+            snowflake: { icon: 'fa-regular fa-snowflake', color: '#29B5E8' },
+            databricks: { icon: 'fa-solid fa-bricks', color: '#FF3621' },
+            excel: { icon: 'fa-solid fa-file-excel', color: '#217346' },
+            sheets: { icon: 'fa-solid fa-table', color: '#0F9D58' },
+            looker: { icon: 'fa-solid fa-magnifying-glass-chart', color: '#4285F4' },
+            asana: { icon: 'fa-solid fa-circle-dot', color: '#F06A6A' },
+            jira: { icon: 'fa-brands fa-jira', color: '#0052CC' },
+            monday: { icon: 'fa-solid fa-m', color: '#FF3D57' },
+            trello: { icon: 'fa-brands fa-trello', color: '#0079BF' },
+            smartsheet: { icon: 'fa-solid fa-table-list', color: '#0074D9' },
+            clickup: { icon: 'fa-solid fa-check-double', color: '#7B68EE' },
+            sharepoint: { icon: 'fa-solid fa-share-nodes', color: '#0078D4' },
+            box: { icon: 'fa-solid fa-box', color: '#0061D5' },
+            dropbox: { icon: 'fa-brands fa-dropbox', color: '#0061FF' },
+            gdrive: { icon: 'fa-brands fa-google-drive', color: '#4285F4' },
+            docusign: { icon: 'fa-solid fa-file-signature', color: '#FFCC00' },
+            adobe_sign: { icon: 'fa-solid fa-pen-nib', color: '#FF0000' },
+            auditboard: { icon: 'fa-solid fa-clipboard-check', color: '#5A67D8' },
+            workiva: { icon: 'fa-solid fa-w', color: '#1B365D' },
+            blackline: { icon: 'fa-solid fa-square-check', color: '#00A3E0' },
+            floqast: { icon: 'fa-solid fa-f', color: '#5046E4' },
+            trintech: { icon: 'fa-solid fa-t', color: '#00A3E0' },
+            concur: { icon: 'fa-solid fa-receipt', color: '#006BA6' },
+            expensify: { icon: 'fa-solid fa-money-bill-wave', color: '#03D47C' },
+            coupa: { icon: 'fa-solid fa-cart-shopping', color: '#E31937' },
+            brex: { icon: 'fa-solid fa-credit-card', color: '#F5F5F5' },
+            ramp: { icon: 'fa-solid fa-bolt', color: '#FFCF4A' },
+            bill: { icon: 'fa-solid fa-file-invoice', color: '#00C4B3' },
+            salesforce: { icon: 'fa-brands fa-salesforce', color: '#00A1E0' },
+            hubspot: { icon: 'fa-brands fa-hubspot', color: '#FF7A59' },
+            bloomberg: { icon: 'fa-solid fa-chart-line', color: '#2800D7' },
+            kyriba: { icon: 'fa-solid fa-k', color: '#00B2A9' },
+            gtreasury: { icon: 'fa-solid fa-g', color: '#003366' }
+        };
+
+        const applications = [
+            { id: 'chatgpt', name: 'ChatGPT', category: 'ai', isAI: true, aiType: 'chatgpt' },
+            { id: 'claude', name: 'Claude', category: 'ai', isAI: true, aiType: 'claude' },
+            { id: 'gemini', name: 'Gemini', category: 'ai', isAI: true, aiType: 'gemini' },
+            { id: 'gmail', name: 'Gmail', category: 'communication' },
+            { id: 'slack', name: 'Slack', category: 'communication' },
+            { id: 'teams', name: 'MS Teams', category: 'communication' },
+            { id: 'outlook', name: 'Outlook', category: 'communication' },
+            { id: 'zoom', name: 'Zoom', category: 'communication' },
+            { id: 'sap', name: 'SAP', category: 'finance' },
+            { id: 'oracle', name: 'Oracle', category: 'finance' },
+            { id: 'netsuite', name: 'NetSuite', category: 'finance' },
+            { id: 'quickbooks', name: 'QuickBooks', category: 'finance' },
+            { id: 'workday', name: 'Workday', category: 'finance' },
+            { id: 'sage', name: 'Sage', category: 'finance' },
+            { id: 'xero', name: 'Xero', category: 'finance' },
+            { id: 'dynamics', name: 'Dynamics 365', category: 'finance' },
+            { id: 'onesource', name: 'OneSource', category: 'tax' },
+            { id: 'vertex', name: 'Vertex', category: 'tax' },
+            { id: 'avalara', name: 'Avalara', category: 'tax' },
+            { id: 'cch', name: 'CCH Axcess', category: 'tax' },
+            { id: 'bloomberg_tax', name: 'Bloomberg Tax', category: 'tax' },
+            { id: 'taxjar', name: 'TaxJar', category: 'tax' },
+            { id: 'sovos', name: 'Sovos', category: 'tax' },
+            { id: 'corptax', name: 'Corptax', category: 'tax' },
+            { id: 'longview', name: 'Longview', category: 'tax' },
+            { id: 'tableau', name: 'Tableau', category: 'analytics' },
+            { id: 'powerbi', name: 'Power BI', category: 'analytics' },
+            { id: 'alteryx', name: 'Alteryx', category: 'analytics' },
+            { id: 'snowflake', name: 'Snowflake', category: 'analytics' },
+            { id: 'databricks', name: 'Databricks', category: 'analytics' },
+            { id: 'excel', name: 'Excel', category: 'analytics' },
+            { id: 'sheets', name: 'Sheets', category: 'analytics' },
+            { id: 'looker', name: 'Looker', category: 'analytics' },
+            { id: 'asana', name: 'Asana', category: 'project' },
+            { id: 'jira', name: 'Jira', category: 'project' },
+            { id: 'monday', name: 'Monday', category: 'project' },
+            { id: 'trello', name: 'Trello', category: 'project' },
+            { id: 'smartsheet', name: 'Smartsheet', category: 'project' },
+            { id: 'clickup', name: 'ClickUp', category: 'project' },
+            { id: 'sharepoint', name: 'SharePoint', category: 'document' },
+            { id: 'box', name: 'Box', category: 'document' },
+            { id: 'dropbox', name: 'Dropbox', category: 'document' },
+            { id: 'gdrive', name: 'Drive', category: 'document' },
+            { id: 'docusign', name: 'DocuSign', category: 'document' },
+            { id: 'adobe_sign', name: 'Adobe Sign', category: 'document' },
+            { id: 'auditboard', name: 'AuditBoard', category: 'compliance' },
+            { id: 'workiva', name: 'Workiva', category: 'compliance' },
+            { id: 'blackline', name: 'BlackLine', category: 'compliance' },
+            { id: 'floqast', name: 'FloQast', category: 'compliance' },
+            { id: 'trintech', name: 'Trintech', category: 'compliance' },
+            { id: 'concur', name: 'Concur', category: 'expense' },
+            { id: 'expensify', name: 'Expensify', category: 'expense' },
+            { id: 'coupa', name: 'Coupa', category: 'expense' },
+            { id: 'brex', name: 'Brex', category: 'expense' },
+            { id: 'ramp', name: 'Ramp', category: 'expense' },
+            { id: 'bill', name: 'Bill.com', category: 'expense' },
+            { id: 'salesforce', name: 'Salesforce', category: 'crm' },
+            { id: 'hubspot', name: 'HubSpot', category: 'crm' },
+            { id: 'bloomberg', name: 'Bloomberg', category: 'banking' },
+            { id: 'kyriba', name: 'Kyriba', category: 'banking' },
+            { id: 'gtreasury', name: 'GTreasury', category: 'banking' }
+        ];
+
+        const appCountEl = document.getElementById('app-count');
+        if (appCountEl) appCountEl.textContent = applications.length;
+
+        // Integration database
+        const integrationDatabase = {
+            'gmail+slack': [
+                { ai: 'gemini', title: 'Smart Email to Slack Routing', description: 'Gemini automatically categorizes emails and routes summaries to relevant Slack channels based on content analysis.', flow: ['Email received', 'Analyze content', 'Route to channel', 'Notify team'] },
+                { ai: 'claude', title: 'Email Thread Summarization', description: 'Claude processes email threads and posts concise summaries to Slack with action items highlighted.', flow: ['Email thread', 'Summarize', 'Extract actions', 'Post to Slack'] }
+            ],
+            'onesource+excel': [
+                { ai: 'claude', title: 'Tax Provision Analysis', description: 'Claude analyzes tax provision data from OneSource and generates Excel reports with variance explanations.', flow: ['Extract data', 'Analyze variances', 'Generate report'] },
+                { ai: 'chatgpt', title: 'Tax Document Preparation', description: 'ChatGPT prepares tax workpapers from OneSource data formatted for Excel templates.', flow: ['Pull data', 'Format workpapers', 'Apply templates'] }
+            ],
+            'vertex+sap': [
+                { ai: 'claude', title: 'Tax Calculation Reconciliation', description: 'Claude reconciles tax calculations between Vertex and SAP, identifying discrepancies automatically.', flow: ['Extract transactions', 'Compare calculations', 'Generate adjustments'] },
+                { ai: 'gemini', title: 'Real-time Tax Compliance', description: 'Gemini monitors SAP transactions ensuring Vertex tax calculations are applied correctly.', flow: ['Monitor SAP', 'Validate taxes', 'Log compliance'] }
+            ],
+            'salesforce+slack': [
+                { ai: 'chatgpt', title: 'Deal Alert Intelligence', description: 'ChatGPT monitors opportunities and sends intelligent alerts to Slack when deals need attention.', flow: ['Monitor deals', 'Analyze risk', 'Alert team'] },
+                { ai: 'gemini', title: 'Customer Intelligence Bot', description: 'Gemini provides customer context in Slack by summarizing Salesforce account data.', flow: ['Query Salesforce', 'Summarize account', 'Reply in thread'] }
+            ],
+            'snowflake+tableau': [
+                { ai: 'claude', title: 'Data Pipeline Documentation', description: 'Claude analyzes Snowflake data models and generates documentation for Tableau dashboards.', flow: ['Scan schema', 'Map to Tableau', 'Generate docs'] },
+                { ai: 'chatgpt', title: 'Natural Language Queries', description: 'ChatGPT translates natural language questions into Snowflake SQL and visualizes in Tableau.', flow: ['User question', 'Generate SQL', 'Create visualization'] }
+            ],
+            'blackline+oracle': [
+                { ai: 'claude', title: 'Automated Reconciliation Review', description: 'Claude reviews BlackLine reconciliations against Oracle GL data and flags exceptions.', flow: ['Pull balances', 'Match reconciliations', 'Generate commentary'] }
+            ],
+            'workday+teams': [
+                { ai: 'gemini', title: 'HR Finance Integration', description: 'Gemini bridges Workday HR data with Teams for on-demand budget and headcount reports.', flow: ['Request in Teams', 'Query Workday', 'Deliver insights'] }
+            ],
+            'concur+quickbooks': [
+                { ai: 'chatgpt', title: 'Expense Integration', description: 'ChatGPT categorizes Concur expenses and creates properly coded entries in QuickBooks.', flow: ['Import expenses', 'Categorize', 'Post to QuickBooks'] }
+            ],
+            'jira+slack': [
+                { ai: 'chatgpt', title: 'Ticket Creation from Chat', description: 'ChatGPT creates Jira tickets from Slack conversations with proper formatting and labels.', flow: ['Parse conversation', 'Create ticket', 'Link to Slack'] }
+            ],
+            'docusign+salesforce': [
+                { ai: 'chatgpt', title: 'Contract Intelligence', description: 'ChatGPT extracts key terms from signed DocuSign contracts and updates Salesforce records.', flow: ['Contract signed', 'Extract terms', 'Update Salesforce'] }
+            ]
+        };
+
+        const genericIntegrations = {
+            chatgpt: [
+                { title: 'Custom GPT Integration', description: 'Build a Custom GPT connecting both systems for unified data management.', flow: ['Configure', 'Connect APIs', 'Deploy'] }
+            ],
+            claude: [
+                { title: 'Intelligent Document Processing', description: 'Claude processes large documents across systems, extracting insights and syncing data.', flow: ['Ingest', 'Analyze', 'Extract', 'Sync'] }
+            ],
+            gemini: [
+                { title: 'Workspace-Native Integration', description: 'Gemini leverages Google Workspace for seamless integrations via Sheets, Gmail, and Drive.', flow: ['Trigger', 'Process', 'Connect', 'Complete'] }
+            ]
+        };
+
+        // Graph setup
+        const graphContainer = document.querySelector('.hub-graph');
+        const svg = d3.select('#graph');
+        const graphRect = graphContainer.getBoundingClientRect();
+        const width = graphRect.width;
+        const height = graphRect.height;
+        svg.attr('viewBox', [0, 0, width, height]);
+
+        const defs = svg.append('defs');
+
+        const shadowFilter = defs.append('filter').attr('id', 'shadow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+        shadowFilter.append('feDropShadow').attr('dx', '0').attr('dy', '1').attr('stdDeviation', '2').attr('flood-color', '#0f172a').attr('flood-opacity', '0.2');
+
+        const aiShadow = defs.append('filter').attr('id', 'ai-shadow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+        aiShadow.append('feDropShadow').attr('dx', '0').attr('dy', '2').attr('stdDeviation', '4').attr('flood-color', '#6366F1').attr('flood-opacity', '0.3');
+
+        const selectGlow = defs.append('filter').attr('id', 'select-glow').attr('x', '-50%').attr('y', '-50%').attr('width', '200%').attr('height', '200%');
+        selectGlow.append('feDropShadow').attr('dx', '0').attr('dy', '0').attr('stdDeviation', '4').attr('flood-color', '#6366F1').attr('flood-opacity', '0.5');
+
+        const container = svg.append('g');
+        const zoom = d3.zoom().scaleExtent([0.9, 0.9]).on('zoom', e => container.attr('transform', e.transform));
+        svg.call(zoom).on('wheel.zoom', null).on('dblclick.zoom', null);
+
+        const nodeRadius = 22;
+        const nodes = applications.map(app => ({ ...app, radius: nodeRadius }));
+        const aiNodes = nodes.filter(n => n.isAI);
+        const appNodes = nodes.filter(n => !n.isAI);
+
+        const links = [];
+        const categoryOrder = ['communication', 'finance', 'tax', 'analytics', 'project', 'document', 'compliance', 'expense', 'crm', 'banking'];
+        categoryOrder.forEach(cat => {
+            const catNodes = appNodes.filter(n => n.category === cat);
+            for (let i = 0; i < catNodes.length - 1; i++) {
+                links.push({ source: catNodes[i].id, target: catNodes[i + 1].id, type: 'category-connection' });
+            }
+            if (catNodes.length > 2) {
+                links.push({ source: catNodes[catNodes.length - 1].id, target: catNodes[0].id, type: 'category-connection' });
+            }
+        });
+
+        for (let i = 0; i < aiNodes.length; i++) {
+            for (let j = i + 1; j < aiNodes.length; j++) {
+                links.push({ source: aiNodes[i].id, target: aiNodes[j].id, type: 'ai-connection' });
+            }
+        }
+
+        categoryOrder.forEach(cat => {
+            const catNodes = appNodes.filter(n => n.category === cat);
+            if (catNodes.length > 0) {
+                const midIdx = Math.floor(catNodes.length / 2);
+                links.push({ source: catNodes[midIdx].id, target: 'chatgpt', type: 'ai-connection' });
+            }
+        });
+
+        const centerX = width / 2;
+        const centerY = height / 2 - 40;
+        const circleRadius = Math.min(width, height) * 0.36;
+
+        const aiRadius = 50;
+        aiNodes.forEach((node, i) => {
+            const angle = (i * 2 * Math.PI / 3) - Math.PI / 2;
+            node.x = centerX + Math.cos(angle) * aiRadius;
+            node.y = centerY + Math.sin(angle) * aiRadius;
+            node.fx = node.x;
+            node.fy = node.y;
+        });
+
+        let currentAngle = -Math.PI / 2;
+        const totalApps = appNodes.length;
+        const anglePerApp = (2 * Math.PI) / totalApps;
+
+        categoryOrder.forEach(cat => {
+            const catNodes = appNodes.filter(n => n.category === cat);
+            catNodes.forEach((node, i) => {
+                const radiusOffset = (i % 2 === 0) ? 0 : 16;
+                node.x = centerX + Math.cos(currentAngle) * (circleRadius + radiusOffset);
+                node.y = centerY + Math.sin(currentAngle) * (circleRadius + radiusOffset);
+                currentAngle += anglePerApp;
+            });
+        });
+
+        const linkGroup = container.append('g').attr('class', 'links');
+        const link = linkGroup.selectAll('path')
+            .data(links)
+            .join('path')
+            .attr('class', d => `link ${d.type}`);
+
+        const simulation = d3.forceSimulation(nodes)
+            .force('link', d3.forceLink(links).id(d => d.id).strength(0))
+            .force('collision', d3.forceCollide().radius(d => d.radius + 5))
+            .force('radial', d3.forceRadial(d => d.isAI ? aiRadius : circleRadius, centerX, centerY).strength(d => d.isAI ? 0 : 0.8))
+            .force('x', d3.forceX(d => d.x).strength(0.3))
+            .force('y', d3.forceY(d => d.y).strength(0.3))
+            .alpha(0.3);
+
+        const node = container.append('g').selectAll('g').data(nodes).join('g')
+            .attr('class', 'node')
+            .call(d3.drag().on('start', dragstarted).on('drag', dragged).on('end', dragended));
+
+        node.append('foreignObject')
+            .attr('x', -16)
+            .attr('y', -16)
+            .attr('width', 32)
+            .attr('height', 32)
+            .attr('class', 'node-icon-container')
+            .append('xhtml:div')
+            .style('width', '32px')
+            .style('height', '32px')
+            .style('display', 'flex')
+            .style('align-items', 'center')
+            .style('justify-content', 'center')
+            .style('color', d => appIcons[d.id]?.color || categoryColors[d.category] || '#666')
+            .style('font-size', '28px')
+            .style('filter', 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))')
+            .style('transition', 'all 0.2s ease')
+            .attr('class', 'node-icon')
+            .html(d => {
+                const iconData = appIcons[d.id];
+                if (iconData && iconData.svg) return iconData.svg;
+                if (iconData) return `<i class="${iconData.icon}"></i>`;
+                return `<i class="fa-solid fa-circle"></i>`;
+            });
+
+        node.append('text')
+            .attr('class', 'node-label')
+            .attr('dy', 26)
+            .text(d => d.name);
+
+        function shortenLine(x1, y1, x2, y2, shortenBy) {
+            const dx = x2 - x1;
+            const dy = y2 - y1;
+            const length = Math.sqrt(dx * dx + dy * dy);
+            if (length === 0) return { x1, y1, x2, y2 };
+            const ratio = shortenBy / length;
+            return {
+                x1: x1 + dx * ratio,
+                y1: y1 + dy * ratio,
+                x2: x2 - dx * ratio,
+                y2: y2 - dy * ratio
+            };
+        }
+
+        const iconPadding = 35;
+        simulation.on('tick', () => {
+            link.attr('d', d => {
+                const shortened = shortenLine(d.source.x, d.source.y, d.target.x, d.target.y, iconPadding);
+                return `M ${shortened.x1} ${shortened.y1} L ${shortened.x2} ${shortened.y2}`;
+            });
+            node.attr('transform', d => `translate(${d.x},${d.y})`);
+        });
+
+        function dragstarted(event) {
+            if (!event.active) simulation.alphaTarget(0.3).restart();
+            event.subject.fx = event.subject.x;
+            event.subject.fy = event.subject.y;
+        }
+
+        function dragged(event) {
+            event.subject.fx = event.x;
+            event.subject.fy = event.y;
+        }
+
+        function dragended(event) {
+            if (!event.active) simulation.alphaTarget(0);
+            if (!event.subject.isAI) {
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+        }
+
+        // Selection logic
+        let selectedNodes = [];
+
+        node.on('click', (event, d) => {
+            event.stopPropagation();
+            toggleSelection(d);
+        });
+
+        function toggleSelection(d) {
+            const idx = selectedNodes.findIndex(n => n.id === d.id);
+            if (idx > -1) selectedNodes.splice(idx, 1);
+            else if (selectedNodes.length < 5) selectedNodes.push(d);
+            updateVisuals();
+            updatePanel();
+        }
+
+        function updateVisuals() {
+            const selectedIds = new Set(selectedNodes.map(n => n.id));
+            node.each(function(d) {
+                const g = d3.select(this);
+                const isSelected = selectedIds.has(d.id);
+                g.classed('selected', isSelected);
+                g.select('.node-icon-container div')
+                    .style('font-size', isSelected ? '34px' : '28px')
+                    .style('filter', isSelected ? 'drop-shadow(0 0 8px rgba(99, 102, 241, 0.6))' : 'drop-shadow(0 2px 4px rgba(0,0,0,0.15))');
+            });
+            link.classed('highlighted', d => selectedIds.has(d.source.id) && selectedIds.has(d.target.id));
+        }
+
+        function updatePanel() {
+            const el = document.getElementById('selectedApps');
+            const btn = document.getElementById('clearBtn');
+            const results = document.getElementById('integrationResults');
+
+            if (selectedNodes.length === 0) {
+                el.innerHTML = '<span class="hub-placeholder">Click on nodes to select applications</span>';
+                btn.style.display = 'none';
+            } else {
+                el.innerHTML = selectedNodes.map(n => `<div class="hub-selected-app" onclick="toggleSelection(window.nodesById['${n.id}'])"><span>${n.name}</span><span class="remove">&times;</span></div>`).join('');
+                btn.style.display = 'inline-block';
+            }
+
+            if (selectedNodes.length < 2) {
+                results.innerHTML = '<div class="hub-empty-state"><div class="hub-empty-icon">🔗</div><div class="hub-empty-title">Discover Integrations</div><div class="hub-empty-text">Select at least 2 applications to see how AI can automate workflows between them.</div></div>';
+            } else {
+                const integrations = findIntegrations(selectedNodes);
+                results.innerHTML = integrations.map(i => `
+                    <div class="hub-integration-card">
+                        <div><span class="hub-ai-badge ${i.ai}">${i.ai}</span></div>
+                        <div class="hub-int-title">${i.title}</div>
+                        <div class="hub-int-desc">${i.description}</div>
+                        <div class="hub-int-flow">${i.flow.map((s, idx) => `<span class="hub-flow-step">${s}</span>${idx < i.flow.length - 1 ? '<span class="hub-flow-arrow">&rarr;</span>' : ''}`).join('')}</div>
+                    </div>
+                `).join('');
+            }
+        }
+
+        function findIntegrations(nodes) {
+            const ints = [];
+            const ids = nodes.map(n => n.id);
+            for (let i = 0; i < ids.length; i++) {
+                for (let j = i + 1; j < ids.length; j++) {
+                    const k1 = `${ids[i]}+${ids[j]}`, k2 = `${ids[j]}+${ids[i]}`;
+                    if (integrationDatabase[k1]) ints.push(...integrationDatabase[k1]);
+                    else if (integrationDatabase[k2]) ints.push(...integrationDatabase[k2]);
+                }
+            }
+            if (ints.length < 3) {
+                Object.entries(genericIntegrations).forEach(([ai, templates]) => {
+                    templates.forEach(t => ints.push({ ai, title: t.title, description: t.description, flow: t.flow }));
+                });
+            }
+            return ints;
+        }
+
+        window.nodesById = {};
+        nodes.forEach(n => window.nodesById[n.id] = n);
+        window.toggleSelection = toggleSelection;
+
+        document.getElementById('clearBtn').addEventListener('click', () => {
+            selectedNodes = [];
+            updateVisuals();
+            updatePanel();
+        });
+
+        svg.on('click', () => {
+            selectedNodes = [];
+            updateVisuals();
+            updatePanel();
+        });
+
+        setTimeout(() => {
+            svg.transition().duration(400).call(zoom.transform, d3.zoomIdentity.scale(0.9).translate(width * 0.055, height * 0.055));
+        }, 200);
+
+        setTimeout(() => simulation.alpha(0.05), 1500);
+
+        window.addEventListener('resize', () => {
+            const rect = graphContainer.getBoundingClientRect();
+            svg.attr('viewBox', [0, 0, rect.width, rect.height]);
+        });
+    </script>
+</body>
+</html>

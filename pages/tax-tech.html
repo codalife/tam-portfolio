@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Technology | Tam Tran</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Product Section */
+        .product-section {
+            padding: 5rem 0;
+            border-top: 1px solid rgba(100, 116, 139, 0.1);
+        }
+        .product-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        .product-header .ph-icon {
+            width: 44px; height: 44px; border-radius: 10px;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .product-header h2 {
+            font-size: 1.8rem; color: var(--white); margin: 0;
+        }
+        .product-desc {
+            color: var(--gray-light); font-size: 0.95rem; line-height: 1.7;
+            max-width: 800px; margin-bottom: 2.5rem;
+        }
+
+        /* Vertex Subsection Tabs */
+        .vx-tabs {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 0;
+            border-bottom: 1px solid rgba(100, 116, 139, 0.15);
+            flex-wrap: wrap;
+        }
+        .vx-tab {
+            padding: 0.7rem 1.2rem;
+            background: transparent;
+            border: none;
+            border-bottom: 2px solid transparent;
+            color: var(--gray);
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .vx-tab:hover { color: var(--white); }
+        .vx-tab.active {
+            color: #00A1DE;
+            border-bottom-color: #00A1DE;
+        }
+        .os-tab.active {
+            color: #E55300 !important;
+            border-bottom-color: #E55300 !important;
+        }
+        .vx-panel {
+            display: none;
+            background: rgba(30, 41, 59, 0.4);
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            border-top: none;
+            border-radius: 0 0 16px 16px;
+            padding: 2rem;
+            min-height: 280px;
+        }
+        .vx-panel.active { display: block; }
+
+        /* Deployment tab styles */
+        .deploy-tab {
+            padding: 0.5rem 1.1rem;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(100, 116, 139, 0.3);
+            border-radius: 8px;
+            color: var(--gray-light);
+            font-size: 0.8rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .deploy-tab:hover { border-color: rgba(0, 161, 222, 0.5); color: var(--white); }
+        .deploy-tab.active {
+            background: linear-gradient(135deg, #00A1DE, #0078a8);
+            border-color: transparent; color: white;
+            box-shadow: 0 4px 15px rgba(0, 161, 222, 0.3);
+        }
+        .deploy-diagram { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
+        .deploy-box { padding: 0.8rem 1.2rem; border-radius: 10px; text-align: center; min-width: 100px; }
+        .deploy-box .db-label { font-size: 0.75rem; font-weight: 600; }
+        .deploy-box .db-sub { font-size: 0.6rem; margin-top: 2px; }
+        .deploy-arrow-r { color: var(--gray); font-size: 1.2rem; }
+        .deploy-features { display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center; }
+        .deploy-feat {
+            background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(100,116,139,0.15);
+            border-radius: 8px; padding: 0.5rem 0.9rem; font-size: 0.7rem;
+            color: var(--gray-light); display: flex; align-items: center; gap: 0.4rem;
+        }
+        .deploy-feat .feat-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+
+        /* Arch diagram nodes */
+        .vx-node { transition: transform 0.3s ease; }
+        .vx-node:hover { transform: scale(1.08); }
+        .lc-step:hover .lc-icon { transform: scale(1.2); box-shadow: 0 0 20px rgba(99, 102, 241, 0.3); }
+        #sim-run:hover { box-shadow: 0 4px 20px rgba(0, 161, 222, 0.4); transform: translateY(-1px); }
+
+        /* OneSource coming soon */
+        .os-coming-soon {
+            text-align: center;
+            padding: 4rem 2rem;
+            background: rgba(30, 41, 59, 0.3);
+            border: 1px solid rgba(100, 116, 139, 0.15);
+            border-radius: 16px;
+        }
+        .os-coming-soon .os-icon {
+            width: 64px; height: 64px; border-radius: 50%;
+            background: rgba(229, 83, 0, 0.1);
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 1.5rem;
+            animation: pulse-os 3s ease-in-out infinite;
+        }
+        @keyframes pulse-os {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(229, 83, 0, 0.15); }
+            50% { box-shadow: 0 0 25px 8px rgba(229, 83, 0, 0.1); }
+        }
+        .os-coming-soon h3 { color: var(--white); font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .os-coming-soon p { color: var(--gray); font-size: 0.9rem; }
+        .os-dots {
+            display: flex; justify-content: center; gap: 0.4rem; margin-top: 1.5rem;
+        }
+        .os-dots span {
+            width: 5px; height: 5px; border-radius: 50%; background: #E55300; opacity: 0.3;
+            animation: dot-b 1.5s ease-in-out infinite;
+        }
+        .os-dots span:nth-child(2) { animation-delay: 0.3s; }
+        .os-dots span:nth-child(3) { animation-delay: 0.6s; }
+        @keyframes dot-b { 0%, 100% { opacity: 0.15; } 50% { opacity: 0.8; } }
+
+        @media (max-width: 768px) {
+            #tax-sim-container { grid-template-columns: 1fr !important; }
+}
+    </style>
+</head>
+<body>
+    <nav class="navbar scrolled">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="agentic-ai.html">Agentic AI</a></li>
+                <li><a href="tax-tech.html" class="active">Tax Technology</a></li>
+                <li><a href="finance-tech.html">Finance Technology</a></li>
+                <li><a href="my-apps.html">My Apps</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <header class="page-header">
+        <div class="particles" id="particles"></div>
+        <div class="container" style="text-align: center;">
+            <h1 class="animate-slide-up">Tax Technology</h1>
+            <p class="lead animate-slide-up delay-1" style="margin-left: auto; margin-right: auto;">Build or choose the right applications for your tax teams</p>
+        </div>
+    </header>
+
+    <!-- ============================================= -->
+    <!-- VERTEX O SERIES -->
+    <!-- ============================================= -->
+    <section class="product-section" id="vertex-section">
+        <div class="container">
+            <div class="product-header">
+                <div class="ph-icon" style="background: linear-gradient(135deg, #00A1DE, #0078a8);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+                </div>
+                <h2>Vertex O Series</h2>
+            </div>
+            <p class="product-desc">Enterprise indirect tax determination engine used by companies operating across hundreds of jurisdictions. The architecture flows through a connector layer (XML, JSON, Java, BCI) into the calculation engine, backed by TaxGIS for address-to-TAID resolution and TPS for rates, rules, and custom configurations.</p>
+
+            <!-- Tabbed content -->
+            <div class="vx-tabs">
+                <button class="vx-tab active" data-panel="arch">Architecture</button>
+                <button class="vx-tab" data-panel="deploy">Deployment Models</button>
+                <button class="vx-tab" data-panel="sim">Tax Simulation</button>
+                <button class="vx-tab" data-panel="lifecycle">Rule Lifecycle</button>
+            </div>
+
+            <!-- Architecture Panel -->
+            <div class="vx-panel active" id="panel-arch">
+                <div style="overflow-x: auto;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0; min-width: 900px; flex-wrap: nowrap; padding: 1rem 0;">
+                        <!-- ERP / Source -->
+                        <div class="vx-node" style="text-align: center; min-width: 110px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">ERP / Source</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">SAP, Oracle, Custom</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">HTTP POST</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><defs><linearGradient id="ag1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#00A1DE"/></linearGradient></defs><line x1="0" y1="10" x2="50" y2="10" stroke="url(#ag1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#00A1DE"/></svg>
+                        </div>
+                        <!-- Connector -->
+                        <div class="vx-node" style="text-align: center; min-width: 110px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #0ea5e9, #00A1DE); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">Connector</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">XML | JSON | Java | BCI</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">SOAP / REST</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#ag1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#00A1DE"/></svg>
+                        </div>
+                        <!-- Calc Engine -->
+                        <div class="vx-node" style="text-align: center; min-width: 130px;">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #00A1DE, #0078a8); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; box-shadow: 0 0 25px rgba(0, 161, 222, 0.4);">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.32 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            </div>
+                            <div style="color: #00A1DE; font-weight: 700; font-size: 0.95rem;">Calc Engine</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">CalculateTax90</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Lookup</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#ag1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#00A1DE"/></svg>
+                        </div>
+                        <!-- Databases -->
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 130px;">
+                            <div class="vx-node" style="text-align: center;">
+                                <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 0 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+                                </div>
+                                <div style="color: #f59e0b; font-weight: 600; font-size: 0.8rem;">TaxGIS</div>
+                                <div style="color: var(--gray); font-size: 0.65rem;">Address to TAID</div>
+                            </div>
+                            <div class="vx-node" style="text-align: center;">
+                                <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                                </div>
+                                <div style="color: #10b981; font-weight: 600; font-size: 0.8rem;">TPS</div>
+                                <div style="color: var(--gray); font-size: 0.65rem;">Rates & Rules</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Output</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#ag1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#00A1DE"/></svg>
+                        </div>
+                        <!-- Reporting -->
+                        <div class="vx-node" style="text-align: center; min-width: 110px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #ec4899, #be185d); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M21.21 15.89A10 10 0 1 1 8 2.83"/><path d="M22 12A10 10 0 0 0 12 2v10z"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">Reporting</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">Returns, GL, Audit</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deployment Models Panel -->
+            <div class="vx-panel" id="panel-deploy">
+                <div id="deploy-tabs" style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <button class="deploy-tab active" data-tab="onprem">On-Premise</button>
+                    <button class="deploy-tab" data-tab="lite">LITE</button>
+                    <button class="deploy-tab" data-tab="edge">Edge (Containers)</button>
+                    <button class="deploy-tab" data-tab="cloud">Cloud</button>
+                </div>
+                <div id="deploy-content"></div>
+            </div>
+
+            <!-- Tax Simulation Panel -->
+            <div class="vx-panel" id="panel-sim">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;" id="tax-sim-container">
+                    <div>
+                        <div style="color: var(--gray); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Transaction Input</div>
+                        <div style="display: flex; flex-direction: column; gap: 1rem;">
+                            <div>
+                                <label style="color: var(--gray-light); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Jurisdiction</label>
+                                <select id="sim-state" style="width: 100%; padding: 0.6rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(100,116,139,0.3); border-radius: 8px; color: var(--white); font-size: 0.9rem; font-family: inherit;">
+                                    <option value="CA">California (Destination-based)</option>
+                                    <option value="TX">Texas (Origin-based)</option>
+                                    <option value="NY">New York (Destination-based)</option>
+                                    <option value="CO">Colorado (Mixed / PIFs)</option>
+                                    <option value="FL">Florida (Destination + Resort Tax)</option>
+                                    <option value="OR">Oregon (No Sales Tax)</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="color: var(--gray-light); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Product Category (TPCC)</label>
+                                <select id="sim-product" style="width: 100%; padding: 0.6rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(100,116,139,0.3); border-radius: 8px; color: var(--white); font-size: 0.9rem; font-family: inherit;">
+                                    <option value="digital">Digital Services (SaaS / API)</option>
+                                    <option value="food_prepared">Prepared Food</option>
+                                    <option value="food_grocery">Grocery (Unprepared)</option>
+                                    <option value="tangible">Tangible Personal Property</option>
+                                    <option value="saas">Software Subscription</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label style="color: var(--gray-light); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Transaction Amount</label>
+                                <input type="number" id="sim-amount" value="100.00" step="0.01" min="0" style="width: 100%; padding: 0.6rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(100,116,139,0.3); border-radius: 8px; color: var(--white); font-size: 0.9rem; font-family: inherit;">
+                            </div>
+                            <div>
+                                <label style="color: var(--gray-light); font-size: 0.8rem; display: block; margin-bottom: 0.3rem;">Seller Model</label>
+                                <select id="sim-seller" style="width: 100%; padding: 0.6rem; background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(100,116,139,0.3); border-radius: 8px; color: var(--white); font-size: 0.9rem; font-family: inherit;">
+                                    <option value="direct">Direct Seller</option>
+                                    <option value="mpf">Marketplace Facilitator</option>
+                                </select>
+                            </div>
+                            <button id="sim-run" style="padding: 0.7rem; background: linear-gradient(135deg, #00A1DE, #0078a8); border: none; border-radius: 8px; color: white; font-weight: 600; font-size: 0.9rem; cursor: pointer; transition: all 0.3s ease; font-family: inherit;">Run CalculateTax90</button>
+                        </div>
+                    </div>
+                    <div>
+                        <div style="color: var(--gray); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 1rem;">Vertex Response</div>
+                        <div id="sim-output" style="background: rgba(15, 23, 42, 0.8); border: 1px solid rgba(100,116,139,0.2); border-radius: 8px; padding: 1rem; font-family: 'SF Mono', 'Fira Code', monospace; font-size: 0.75rem; line-height: 1.6; color: var(--gray-light); min-height: 320px; overflow-y: auto;">
+                            <span style="color: var(--gray);">Click "Run CalculateTax90" to simulate...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Rule Lifecycle Panel -->
+            <div class="vx-panel" id="panel-lifecycle">
+                <div style="overflow-x: auto;">
+                    <div id="lifecycle-pipeline" style="display: flex; align-items: center; justify-content: center; gap: 0; min-width: 800px; padding-top: 1rem;">
+                        <div class="lc-step" data-step="1" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(99,102,241,0.2); border: 2px solid #6366f1; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Configure</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Vertex Cloud</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#6366f1" opacity="0.6"/></svg>
+                        <div class="lc-step" data-step="2" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(14,165,233,0.2); border: 2px solid #0ea5e9; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#0ea5e9" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">TEE Extract</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Generate Diff</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#0ea5e9" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#0ea5e9" opacity="0.6"/></svg>
+                        <div class="lc-step" data-step="3" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(245,158,11,0.2); border: 2px solid #f59e0b; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Code Review</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Peer Review</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#f59e0b" opacity="0.6"/></svg>
+                        <div class="lc-step" data-step="4" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(16,185,129,0.2); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Staging</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Golden Tests</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#10b981" opacity="0.6"/></svg>
+                        <div class="lc-step" data-step="5" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(236,72,153,0.2); border: 2px solid #ec4899; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Shadow</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">100% Traffic</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#ec4899" opacity="0.6"/></svg>
+                        <div class="lc-step" data-step="6" style="text-align: center; flex: 1;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(139,92,246,0.2); border: 2px solid #8b5cf6; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Production</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Canary &rarr; Full</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 1.5rem; position: relative; height: 4px; background: rgba(100,116,139,0.15); border-radius: 2px; overflow: hidden;">
+                    <div id="lc-progress" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #6366f1, #0ea5e9, #f59e0b, #10b981, #ec4899, #8b5cf6); border-radius: 2px; transition: width 0.6s ease;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 0.75rem;">
+                    <span id="lc-status" style="color: var(--gray); font-size: 0.75rem;">Hover over each step to explore</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================= -->
+    <!-- THOMSON REUTERS ONESOURCE -->
+    <!-- ============================================= -->
+    <section class="product-section" id="onesource-section" style="background: var(--dark-lighter);">
+        <div class="container">
+            <div class="product-header">
+                <div class="ph-icon" style="background: linear-gradient(135deg, #E55300, #ff7b2e);">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                </div>
+                <h2>Thomson Reuters ONESOURCE</h2>
+            </div>
+            <p class="product-desc">Unified tax platform covering indirect tax determination, income tax provision (ASC 740 / IAS 12), compliance filing, and workflow management. Runs on Oracle Cloud Infrastructure with an Oracle Autonomous Database processing 10B+ tax transactions annually across 190+ countries.</p>
+
+            <!-- OneSource Tabs -->
+            <div class="vx-tabs">
+                <button class="vx-tab os-tab active" data-panel="os-arch">Indirect Tax Architecture</button>
+                <button class="vx-tab os-tab" data-panel="os-deploy">Deployment Models</button>
+                <button class="vx-tab os-tab" data-panel="os-provision">Tax Provision (Direct)</button>
+                <button class="vx-tab os-tab" data-panel="os-platform">Platform Modules</button>
+            </div>
+
+            <!-- IDT Architecture Panel -->
+            <div class="vx-panel active" id="panel-os-arch">
+                <div style="overflow-x: auto;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0; min-width: 900px; flex-wrap: nowrap; padding: 1rem 0;">
+                        <!-- ERP -->
+                        <div class="vx-node" style="text-align: center; min-width: 110px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #6366f1, #8b5cf6); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">ERP / Source</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">SAP, Oracle, D365</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Connector / iFlow</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><defs><linearGradient id="og1" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#E55300"/></linearGradient></defs><line x1="0" y1="10" x2="50" y2="10" stroke="url(#og1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#E55300"/></svg>
+                        </div>
+                        <!-- Address Validation -->
+                        <div class="vx-node" style="text-align: center; min-width: 120px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="10" r="3"/><path d="M12 21.7C17.3 17 20 13 20 10a8 8 0 0 0-16 0c0 3 2.7 7 8 11.7z"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">Address Engine</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">CASS-certified</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Jurisdiction</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#og1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#E55300"/></svg>
+                        </div>
+                        <!-- Determination Engine -->
+                        <div class="vx-node" style="text-align: center; min-width: 140px;">
+                            <div style="width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, #E55300, #c44700); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; box-shadow: 0 0 25px rgba(229, 83, 0, 0.4);">
+                                <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06A1.65 1.65 0 0 0 19.32 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+                            </div>
+                            <div style="color: #E55300; font-weight: 700; font-size: 0.95rem;">Determination</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">REST /taxes/v1/calculate</div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Lookup</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#og1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#E55300"/></svg>
+                        </div>
+                        <!-- Tax Content / Exemptions -->
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; min-width: 130px;">
+                            <div class="vx-node" style="text-align: center;">
+                                <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                                </div>
+                                <div style="color: #10b981; font-weight: 600; font-size: 0.8rem;">Tax Content</div>
+                                <div style="color: var(--gray); font-size: 0.65rem;">15,800+ jurisdictions</div>
+                            </div>
+                            <div class="vx-node" style="text-align: center;">
+                                <div style="width: 60px; height: 60px; border-radius: 10px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.4rem;">
+                                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+                                </div>
+                                <div style="color: #8b5cf6; font-weight: 600; font-size: 0.8rem;">Exemptions</div>
+                                <div style="color: var(--gray); font-size: 0.65rem;">Cert Manager</div>
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; align-items: center; padding: 0 0.3rem;">
+                            <div style="font-size: 0.6rem; color: var(--gray); margin-bottom: 2px;">Response</div>
+                            <svg width="60" height="20" viewBox="0 0 60 20"><line x1="0" y1="10" x2="50" y2="10" stroke="url(#og1)" stroke-width="2" stroke-dasharray="4 3"><animate attributeName="stroke-dashoffset" from="0" to="-14" dur="1s" repeatCount="indefinite"/></line><polygon points="48,5 58,10 48,15" fill="#E55300"/></svg>
+                        </div>
+                        <!-- Compliance / Returns -->
+                        <div class="vx-node" style="text-align: center; min-width: 110px;">
+                            <div style="width: 70px; height: 70px; border-radius: 12px; background: linear-gradient(135deg, #ec4899, #be185d); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem;">
+                                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.5"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-weight: 600; font-size: 0.85rem;">Compliance</div>
+                            <div style="color: var(--gray); font-size: 0.7rem; margin-top: 2px;">Returns & E-Filing</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Deployment Models Panel -->
+            <div class="vx-panel" id="panel-os-deploy">
+                <div id="os-deploy-tabs" style="display: flex; justify-content: center; gap: 0.5rem; margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <button class="deploy-tab os-dtab active" data-tab="os-cloud">Cloud SaaS</button>
+                    <button class="deploy-tab os-dtab" data-tab="os-onprem">On-Premise</button>
+                    <button class="deploy-tab os-dtab" data-tab="os-edge">Determination Anywhere</button>
+                </div>
+                <div id="os-deploy-content"></div>
+            </div>
+
+            <!-- Tax Provision Panel -->
+            <div class="vx-panel" id="panel-os-provision">
+                <div style="color: var(--white); font-weight: 600; font-size: 1rem; text-align: center; margin-bottom: 1.5rem;">Tax Provision Workflow (ASC 740 / IAS 12)</div>
+                <div style="overflow-x: auto;">
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 0; min-width: 850px; padding-top: 1rem;">
+                        <div class="lc-step os-prov-step" data-ostep="1" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(229,83,0,0.2); border: 2px solid #E55300; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E55300" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Data Ingestion</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">DataFlow / GL Feed</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#E55300" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#E55300" opacity="0.6"/></svg>
+                        <div class="lc-step os-prov-step" data-ostep="2" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(245,158,11,0.2); border: 2px solid #f59e0b; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#f59e0b" stroke-width="2"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Book-to-Tax</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Map Differences</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#f59e0b" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#f59e0b" opacity="0.6"/></svg>
+                        <div class="lc-step os-prov-step" data-ostep="3" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(16,185,129,0.2); border: 2px solid #10b981; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Calculation</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Current + Deferred</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#10b981" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#10b981" opacity="0.6"/></svg>
+                        <div class="lc-step os-prov-step" data-ostep="4" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(99,102,241,0.2); border: 2px solid #6366f1; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Review</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">ETR & Approval</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#6366f1" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#6366f1" opacity="0.6"/></svg>
+                        <div class="lc-step os-prov-step" data-ostep="5" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(236,72,153,0.2); border: 2px solid #ec4899; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#ec4899" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Journal Entries</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Auto-generate</div>
+                        </div>
+                        <svg width="30" height="20" viewBox="0 0 30 20" style="flex-shrink: 0;"><line x1="0" y1="10" x2="22" y2="10" stroke="#ec4899" stroke-width="1.5" stroke-dasharray="3 2"/><polygon points="20,6 28,10 20,14" fill="#ec4899" opacity="0.6"/></svg>
+                        <div class="lc-step os-prov-step" data-ostep="6" style="text-align: center; flex: 1; cursor: pointer;">
+                            <div class="lc-icon" style="width: 50px; height: 50px; border-radius: 50%; background: rgba(139,92,246,0.2); border: 2px solid #8b5cf6; display: flex; align-items: center; justify-content: center; margin: 0 auto 0.5rem; transition: all 0.4s ease;">
+                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#8b5cf6" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                            </div>
+                            <div style="color: var(--white); font-size: 0.75rem; font-weight: 600;">Reporting</div>
+                            <div style="color: var(--gray); font-size: 0.6rem;">Disclosures</div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Progress bar -->
+                <div style="margin-top: 1.5rem; position: relative; height: 4px; background: rgba(100,116,139,0.15); border-radius: 2px; overflow: hidden;">
+                    <div id="os-prov-progress" style="position: absolute; top: 0; left: 0; height: 100%; width: 0%; background: linear-gradient(90deg, #E55300, #f59e0b, #10b981, #6366f1, #ec4899, #8b5cf6); border-radius: 2px; transition: width 0.6s ease;"></div>
+                </div>
+                <div style="text-align: center; margin-top: 0.75rem;">
+                    <span id="os-prov-status" style="color: var(--gray); font-size: 0.75rem;">Hover over each step to explore</span>
+                </div>
+            </div>
+
+            <!-- Platform Modules Panel -->
+            <div class="vx-panel" id="panel-os-platform">
+                <div style="color: var(--white); font-weight: 600; font-size: 1rem; text-align: center; margin-bottom: 1.5rem;">ONESOURCE Platform Ecosystem</div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div style="background: rgba(229,83,0,0.08); border: 1px solid rgba(229,83,0,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(229,83,0,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #E55300, #ff7b2e); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">Indirect Tax</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">Determination engine for sales, VAT, GST, excise across 190+ countries</div>
+                    </div>
+                    <div style="background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(245,158,11,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #f59e0b, #d97706); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">Tax Provision</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">ASC 740 / IAS 12 current & deferred tax calculation with ETR analysis</div>
+                    </div>
+                    <div style="background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(16,185,129,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #10b981, #059669); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">Compliance</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">750+ US forms, 60+ countries, e-filing via MeF and E-Filing Manager</div>
+                    </div>
+                    <div style="background: rgba(99,102,241,0.08); border: 1px solid rgba(99,102,241,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(99,102,241,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #6366f1, #4f46e5); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">DataFlow</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">ETL automation for GL data extraction, enrichment, and distribution</div>
+                    </div>
+                    <div style="background: rgba(139,92,246,0.08); border: 1px solid rgba(139,92,246,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(139,92,246,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #8b5cf6, #7c3aed); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">Data Hub</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">Cloud tax data warehouse with currency conversion and geo enrichment</div>
+                    </div>
+                    <div style="background: rgba(236,72,153,0.08); border: 1px solid rgba(236,72,153,0.25); border-radius: 12px; padding: 1.2rem; text-align: center; transition: all 0.3s ease;" onmouseover="this.style.transform='translateY(-4px)';this.style.boxShadow='0 8px 25px rgba(236,72,153,0.15)'" onmouseout="this.style.transform='';this.style.boxShadow=''">
+                        <div style="width: 40px; height: 40px; border-radius: 8px; background: linear-gradient(135deg, #ec4899, #be185d); display: flex; align-items: center; justify-content: center; margin: 0 auto 0.7rem;">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                        </div>
+                        <div style="color: var(--white); font-weight: 600; font-size: 0.8rem; margin-bottom: 0.3rem;">Workflow Manager</div>
+                        <div style="color: var(--gray); font-size: 0.65rem; line-height: 1.5;">Task tracking, deadlines, approvals with preloaded tax calendar templates</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-contact">
+                    <div class="footer-contact-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+                    </div>
+                    <a href="mailto:tpminhtam@gmail.com">tpminhtam@gmail.com</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.classList.toggle('active');
+        });
+
+        // Particles
+        function createParticles() {
+            const container = document.getElementById('particles');
+            if (!container) return;
+            for (let i = 0; i < 30; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.top = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 5 + 's';
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+                container.appendChild(particle);
+            }
+        }
+        createParticles();
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) entry.target.classList.add('animate-in');
+            });
+        }, { threshold: 0.1 });
+        document.querySelectorAll('.vx-node, .lc-step').forEach(el => {
+            el.classList.add('scroll-animate');
+            observer.observe(el);
+        });
+
+        // =============================================
+        // VERTEX TABS (scoped to #vertex-section)
+        // =============================================
+        const vxSection = document.getElementById('vertex-section');
+        vxSection.querySelectorAll('.vx-tab:not(.os-tab)').forEach(tab => {
+            tab.addEventListener('click', () => {
+                vxSection.querySelectorAll('.vx-tab').forEach(t => t.classList.remove('active'));
+                vxSection.querySelectorAll('.vx-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+                if (tab.dataset.panel === 'deploy') renderDeployTab(document.querySelector('.deploy-tab.active').dataset.tab);
+            });
+        });
+
+        // =============================================
+        // DEPLOYMENT MODEL TABS
+        // =============================================
+        const deployData = {
+            onprem: {
+                title: 'On-Premise (Full Installation)',
+                diagram: [
+                    { label: 'Vertex Cloud', sub: 'Config UI', color: '#6366f1' },
+                    '&rarr;',
+                    { label: 'On-Prem Server', sub: 'J2EE / Tomcat', color: '#00A1DE' },
+                    '&harr;',
+                    { label: 'Database', sub: 'SQL Server / Oracle', color: '#10b981' },
+                    '&rarr;',
+                    { label: 'ERP', sub: 'Real-time calls', color: '#f59e0b' }
+                ],
+                features: [
+                    { text: 'Full database connectivity (SQL Server, Oracle, DB2)', color: '#10b981' },
+                    { text: 'Self-managed Service Release upgrades', color: '#f59e0b' },
+                    { text: 'Complete control over patch timing', color: '#0ea5e9' },
+                    { text: 'Highest infrastructure overhead', color: '#ec4899' }
+                ]
+            },
+            lite: {
+                title: 'LITE (Local Indirect Tax Engine)',
+                diagram: [
+                    { label: 'Vertex Cloud', sub: 'Config & Rules', color: '#6366f1' },
+                    '&rarr; ZIP &rarr;',
+                    { label: 'LITE Engine', sub: 'No DB required', color: '#00A1DE' },
+                    '&rarr;',
+                    { label: 'Upstream Service', sub: 'Stateless calls', color: '#f59e0b' }
+                ],
+                features: [
+                    { text: 'No database dependency -- rules bundled as flat files', color: '#10b981' },
+                    { text: 'Rules exported from Cloud as ZIP, uploaded to LITE', color: '#6366f1' },
+                    { text: 'Stateless: upstream service owns transaction persistence', color: '#0ea5e9' },
+                    { text: 'Ideal when infra does not support Vertex standard DBs', color: '#f59e0b' }
+                ]
+            },
+            edge: {
+                title: 'Edge (Containerized)',
+                diagram: [
+                    { label: 'Vertex Portal', sub: 'Configure & Build', color: '#6366f1' },
+                    '&rarr;',
+                    { label: 'Container Registry', sub: 'Docker Images', color: '#8b5cf6' },
+                    '&rarr;',
+                    { label: 'Tax Calc Image', sub: 'Updated weekly', color: '#00A1DE' },
+                    '+',
+                    { label: 'Lat/Long Image', sub: 'Updated monthly', color: '#f59e0b' }
+                ],
+                features: [
+                    { text: 'Pre-built Docker images: engine + libs + rules bundled', color: '#00A1DE' },
+                    { text: 'Deploy on any cloud or internal K8s infrastructure', color: '#10b981' },
+                    { text: 'Isolated test environments for rule changes', color: '#8b5cf6' },
+                    { text: 'Decouples tax engine lifecycle from infra stack', color: '#f59e0b' },
+                    { text: 'Portal telemetry: usage stats, health metrics, audit trail', color: '#ec4899' }
+                ]
+            },
+            cloud: {
+                title: 'Cloud (Vertex-Hosted)',
+                diagram: [
+                    { label: 'Your Systems', sub: 'ERP / Billing', color: '#f59e0b' },
+                    '&rarr; API &rarr;',
+                    { label: 'Vertex Cloud', sub: 'Fully managed', color: '#00A1DE' },
+                    '&rarr;',
+                    { label: 'Response', sub: 'Tax + TAID', color: '#10b981' }
+                ],
+                features: [
+                    { text: 'Zero infrastructure management', color: '#10b981' },
+                    { text: 'Automatic tax content & platform updates', color: '#00A1DE' },
+                    { text: 'Must adopt Vertex release cycle discipline', color: '#f59e0b' },
+                    { text: 'API-first integration via REST or SOAP', color: '#6366f1' }
+                ]
+            }
+        };
+
+        function renderDeployTab(tab) {
+            const data = deployData[tab];
+            const container = document.getElementById('deploy-content');
+            let diagramHTML = '<div class="deploy-diagram">';
+            data.diagram.forEach(item => {
+                if (typeof item === 'string') {
+                    diagramHTML += `<span class="deploy-arrow-r">${item}</span>`;
+                } else {
+                    diagramHTML += `<div class="deploy-box" style="background: ${item.color}22; border: 1px solid ${item.color}55;"><div class="db-label" style="color: ${item.color};">${item.label}</div><div class="db-sub" style="color: var(--gray);">${item.sub}</div></div>`;
+                }
+            });
+            diagramHTML += '</div>';
+            let featHTML = '<div class="deploy-features">';
+            data.features.forEach(f => {
+                featHTML += `<div class="deploy-feat"><span class="feat-dot" style="background: ${f.color};"></span>${f.text}</div>`;
+            });
+            featHTML += '</div>';
+            container.innerHTML = `<div style="color: var(--white); font-weight: 600; font-size: 1rem; text-align: center; margin-bottom: 1.5rem;">${data.title}</div>${diagramHTML}${featHTML}`;
+        }
+
+        document.querySelectorAll('.deploy-tab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.deploy-tab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderDeployTab(btn.dataset.tab);
+            });
+        });
+        renderDeployTab('onprem');
+
+        // =============================================
+        // TAX CALCULATION SIMULATION
+        // =============================================
+        const taxRules = {
+            CA: { state: 0.0725, county: 0.01, city: 0.0125, situs: 'DESTINATION', taid: '050010000', name: 'California', mpf: true,
+                  notes: { digital: 'Not taxable in CA', food_prepared: 'Taxable - prepared food', food_grocery: 'Exempt - unprepared food', tangible: 'Standard rate', saas: 'Not taxable in CA' },
+                  exempt: ['digital', 'saas', 'food_grocery'] },
+            TX: { state: 0.0625, county: 0.005, city: 0.0125, situs: 'ORIGIN', taid: '220010000', name: 'Texas', mpf: true,
+                  notes: { digital: 'Taxable as data processing', food_prepared: 'Taxable - prepared food', food_grocery: 'Exempt - food for home consumption', tangible: 'Standard rate', saas: 'Taxable - data processing service' },
+                  exempt: ['food_grocery'] },
+            NY: { state: 0.04, county: 0.045, city: 0.00, situs: 'DESTINATION', taid: '320010000', name: 'New York', mpf: true,
+                  notes: { digital: 'Taxable - information service', food_prepared: 'Taxable - prepared food', food_grocery: 'Exempt under $110', tangible: 'Standard rate', saas: 'Taxable - pre-written software' },
+                  exempt: ['food_grocery'] },
+            CO: { state: 0.029, county: 0.01, city: 0.0385, situs: 'MIXED', taid: '060010000', name: 'Colorado', mpf: true,
+                  notes: { digital: 'Taxable - effective 2024', food_prepared: 'Taxable - PIF may apply at city level', food_grocery: 'State exempt, local taxes may apply', tangible: 'Standard rate + PIFs', saas: 'Taxable - digital good' },
+                  exempt: [], pif: true },
+            FL: { state: 0.06, county: 0.015, city: 0.00, situs: 'DESTINATION', taid: '100010000', name: 'Florida', mpf: true,
+                  notes: { digital: 'Not taxable (no digital tax)', food_prepared: 'Taxable + resort tax may apply', food_grocery: 'Exempt - unprepared food', tangible: 'Standard rate', saas: 'Not taxable in FL' },
+                  exempt: ['digital', 'saas', 'food_grocery'], resort: 0.02 },
+            OR: { state: 0, county: 0, city: 0, situs: 'N/A', taid: '380000000', name: 'Oregon', mpf: false,
+                  notes: { digital: 'No sales tax', food_prepared: 'No sales tax', food_grocery: 'No sales tax', tangible: 'No sales tax', saas: 'No sales tax' },
+                  exempt: ['digital', 'food_prepared', 'food_grocery', 'tangible', 'saas'] }
+        };
+        const productLabels = {
+            digital: 'Digital Services', food_prepared: 'Prepared Food',
+            food_grocery: 'Grocery (Unprepared)', tangible: 'Tangible Property', saas: 'Software Subscription'
+        };
+
+        document.getElementById('sim-run').addEventListener('click', () => {
+            const state = document.getElementById('sim-state').value;
+            const product = document.getElementById('sim-product').value;
+            const amount = parseFloat(document.getElementById('sim-amount').value) || 100;
+            const seller = document.getElementById('sim-seller').value;
+            const rules = taxRules[state];
+            const isExempt = rules.exempt.includes(product);
+            const isMPF = seller === 'mpf';
+            let stateTax = 0, countyTax = 0, cityTax = 0, resortTax = 0;
+            if (!isExempt) {
+                stateTax = amount * rules.state;
+                countyTax = amount * rules.county;
+                cityTax = amount * rules.city;
+                if (rules.resort && product === 'food_prepared') resortTax = amount * rules.resort;
+            }
+            const totalTax = stateTax + countyTax + cityTax + resortTax;
+            const liability = isMPF && rules.mpf ? 'MARKETPLACE (Platform collects & remits)' : 'MERCHANT (Seller collects & remits)';
+            const pifNote = rules.pif && !isExempt ? '\n  <span style="color: #f59e0b;">// PIF: City taxes use ORIGIN situs override</span>' : '';
+            const xmlSnippet = `<span style="color: #6366f1;">&lt;CalculateTaxResponse&gt;</span>
+  <span style="color: var(--gray);">&lt;!-- Vertex O Series Response --&gt;</span>
+  <span style="color: #0ea5e9;">&lt;Jurisdiction&gt;</span>${rules.name}<span style="color: #0ea5e9;">&lt;/Jurisdiction&gt;</span>
+  <span style="color: #0ea5e9;">&lt;TaxAreaId&gt;</span><span style="color: #f59e0b;">${rules.taid}</span><span style="color: #0ea5e9;">&lt;/TaxAreaId&gt;</span>
+  <span style="color: #0ea5e9;">&lt;Situs&gt;</span>${rules.situs}<span style="color: #0ea5e9;">&lt;/Situs&gt;</span>
+  <span style="color: #0ea5e9;">&lt;Product&gt;</span>${productLabels[product]}<span style="color: #0ea5e9;">&lt;/Product&gt;</span>
+  <span style="color: #0ea5e9;">&lt;SellerModel&gt;</span>${isMPF ? 'MarketplaceFacilitator' : 'DirectSeller'}<span style="color: #0ea5e9;">&lt;/SellerModel&gt;</span>
+  <span style="color: #0ea5e9;">&lt;Liability&gt;</span>${liability}<span style="color: #0ea5e9;">&lt;/Liability&gt;</span>
+
+  <span style="color: var(--gray);">&lt;!-- Tax Breakdown --&gt;</span>
+  <span style="color: #0ea5e9;">&lt;SubTotal&gt;</span>$${amount.toFixed(2)}<span style="color: #0ea5e9;">&lt;/SubTotal&gt;</span>
+  <span style="color: #0ea5e9;">&lt;StateTax rate="${(rules.state * 100).toFixed(2)}%"&gt;</span>${isExempt ? '<span style="color: #10b981;">EXEMPT</span>' : '<span style="color: #ec4899;">$' + stateTax.toFixed(2) + '</span>'}<span style="color: #0ea5e9;">&lt;/StateTax&gt;</span>
+  <span style="color: #0ea5e9;">&lt;CountyTax rate="${(rules.county * 100).toFixed(2)}%"&gt;</span>${isExempt ? '<span style="color: #10b981;">EXEMPT</span>' : '<span style="color: #ec4899;">$' + countyTax.toFixed(2) + '</span>'}<span style="color: #0ea5e9;">&lt;/CountyTax&gt;</span>
+  <span style="color: #0ea5e9;">&lt;CityTax rate="${(rules.city * 100).toFixed(2)}%"&gt;</span>${isExempt ? '<span style="color: #10b981;">EXEMPT</span>' : '<span style="color: #ec4899;">$' + cityTax.toFixed(2) + '</span>'}<span style="color: #0ea5e9;">&lt;/CityTax&gt;</span>${resortTax > 0 ? `
+  <span style="color: #0ea5e9;">&lt;ResortTax rate="2.00%"&gt;</span><span style="color: #ec4899;">$${resortTax.toFixed(2)}</span><span style="color: #0ea5e9;">&lt;/ResortTax&gt;</span>` : ''}${pifNote}
+
+  <span style="color: #0ea5e9;">&lt;TotalTax&gt;</span><span style="color: ${totalTax > 0 ? '#ec4899' : '#10b981'}; font-weight: 700;">$${totalTax.toFixed(2)}</span><span style="color: #0ea5e9;">&lt;/TotalTax&gt;</span>
+  <span style="color: #0ea5e9;">&lt;Total&gt;</span><span style="font-weight: 700; color: var(--white);">$${(amount + totalTax).toFixed(2)}</span><span style="color: #0ea5e9;">&lt;/Total&gt;</span>
+
+  <span style="color: var(--gray);">&lt;!-- ${rules.notes[product]} --&gt;</span>
+<span style="color: #6366f1;">&lt;/CalculateTaxResponse&gt;</span>`;
+            const output = document.getElementById('sim-output');
+            output.innerHTML = xmlSnippet;
+            output.style.animation = 'none';
+            output.offsetHeight;
+            output.style.animation = 'fadeIn 0.4s ease';
+        });
+
+        // =============================================
+        // LIFECYCLE PIPELINE
+        // =============================================
+        const lcDescriptions = {
+            1: 'Tax team configures rules, registrations, and taxability drivers in Vertex Cloud (On Demand).',
+            2: 'Tax Engine Extract (TEE) is pulled and a diff is generated against the current production state.',
+            3: 'Rule changes undergo peer review. Mismatch analysis categorizes expected vs. unexpected changes.',
+            4: 'Deploy to staging. Golden Tests replay captured production request/response pairs to detect regressions.',
+            5: 'Shadow 100% of production traffic to the new configuration. Compare responses line-by-line.',
+            6: 'Canary deployment, then regional rollout. 12-hour soak-in period. On-call monitoring throughout.'
+        };
+        document.querySelectorAll('.lc-step').forEach(step => {
+            step.style.cursor = 'pointer';
+            step.addEventListener('mouseenter', () => {
+                const n = parseInt(step.dataset.step);
+                document.getElementById('lc-progress').style.width = (n / 6 * 100) + '%';
+                document.getElementById('lc-status').textContent = lcDescriptions[n];
+                document.getElementById('lc-status').style.color = 'var(--white)';
+            });
+            step.addEventListener('mouseleave', () => {
+                document.getElementById('lc-status').textContent = 'Hover over each step to explore';
+                document.getElementById('lc-status').style.color = 'var(--gray)';
+            });
+        });
+
+        // Auto-animate lifecycle on scroll
+        const lcObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    let i = 0;
+                    const steps = [1, 2, 3, 4, 5, 6];
+                    const interval = setInterval(() => {
+                        if (i >= steps.length) { clearInterval(interval); return; }
+                        document.getElementById('lc-progress').style.width = (steps[i] / 6 * 100) + '%';
+                        document.getElementById('lc-status').textContent = lcDescriptions[steps[i]];
+                        document.getElementById('lc-status').style.color = 'var(--white)';
+                        i++;
+                    }, 800);
+                    setTimeout(() => {
+                        document.getElementById('lc-status').textContent = 'Hover over each step to explore';
+                        document.getElementById('lc-status').style.color = 'var(--gray)';
+                    }, steps.length * 800 + 1500);
+                    lcObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.5 });
+        lcObserver.observe(document.getElementById('lifecycle-pipeline'));
+
+        // =============================================
+        // ONESOURCE TABS (scoped to #onesource-section)
+        // =============================================
+        const osSection = document.getElementById('onesource-section');
+        osSection.querySelectorAll('.os-tab').forEach(tab => {
+            tab.addEventListener('click', () => {
+                osSection.querySelectorAll('.os-tab').forEach(t => t.classList.remove('active'));
+                osSection.querySelectorAll('.vx-panel').forEach(p => p.classList.remove('active'));
+                tab.classList.add('active');
+                document.getElementById('panel-' + tab.dataset.panel).classList.add('active');
+                if (tab.dataset.panel === 'os-deploy') renderOsDeployTab(document.querySelector('.os-dtab.active').dataset.tab);
+            });
+        });
+
+        // =============================================
+        // ONESOURCE DEPLOYMENT TABS
+        // =============================================
+        const osDeployData = {
+            'os-cloud': {
+                title: 'Cloud SaaS (Fully Hosted)',
+                diagram: [
+                    { label: 'Your ERP', sub: 'SAP / Oracle / D365', color: '#6366f1' },
+                    '&rarr; REST API &rarr;',
+                    { label: 'ONESOURCE Cloud', sub: 'Thomson Reuters hosted', color: '#E55300' },
+                    '&rarr;',
+                    { label: 'Tax Response', sub: 'JSON + jurisdiction detail', color: '#10b981' }
+                ]
+            },
+            'os-onprem': {
+                title: 'On-Premise',
+                diagram: [
+                    { label: 'Your ERP', sub: 'Internal network', color: '#6366f1' },
+                    '&rarr;',
+                    { label: 'On-Prem IDT', sub: 'Customer data center', color: '#E55300' },
+                    '&harr;',
+                    { label: 'Local DB', sub: 'Tax content', color: '#10b981' }
+                ]
+            },
+            'os-edge': {
+                title: 'Determination Anywhere (Edge Computing)',
+                diagram: [
+                    { label: 'ONESOURCE Cloud', sub: 'Content & sync', color: '#E55300' },
+                    '&rarr; Auto-sync &rarr;',
+                    { label: 'Edge Engine', sub: 'Near your transactions', color: '#8b5cf6' },
+                    '&harr;',
+                    { label: 'POS / Web / Mobile', sub: 'Omni-channel', color: '#f59e0b' }
+                ]
+            }
+        };
+
+        function renderOsDeployTab(tab) {
+            const data = osDeployData[tab];
+            const container = document.getElementById('os-deploy-content');
+            let diagramHTML = '<div class="deploy-diagram">';
+            data.diagram.forEach(item => {
+                if (typeof item === 'string') {
+                    diagramHTML += `<span class="deploy-arrow-r">${item}</span>`;
+                } else {
+                    diagramHTML += `<div class="deploy-box" style="background: ${item.color}22; border: 1px solid ${item.color}55;"><div class="db-label" style="color: ${item.color};">${item.label}</div><div class="db-sub" style="color: var(--gray);">${item.sub}</div></div>`;
+                }
+            });
+            diagramHTML += '</div>';
+            container.innerHTML = `<div style="color: var(--white); font-weight: 600; font-size: 1rem; text-align: center; margin-bottom: 1.5rem;">${data.title}</div>${diagramHTML}`;
+        }
+
+        document.querySelectorAll('.os-dtab').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.os-dtab').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                renderOsDeployTab(btn.dataset.tab);
+            });
+        });
+        renderOsDeployTab('os-cloud');
+
+        // =============================================
+        // ONESOURCE PROVISION WORKFLOW
+        // =============================================
+        const osProvDescriptions = {
+            1: 'Trial balances imported from ERP/GL via DataFlow ETL, Excel Workpaper Add-In, or direct GL feeds into the Data Hub.',
+            2: 'Map GL accounts to ONESOURCE tax chart of accounts. Enter book-to-tax differences: depreciation, reserves, permanent items.',
+            3: 'Engine computes current tax, deferred tax (temporary differences), ETR, NOL carryforwards, GILTI, Subpart F, BEAT, FDII.',
+            4: 'Drill-down into ETR waterfall, variance analysis across datasets. Multi-level approval workflows with audit trail.',
+            5: 'Auto-generate tax journal entries via JE Profiles. Post directly to SAP S/4HANA or export via Workpaper Add-In.',
+            6: 'Financial statement disclosures, rate reconciliation, deferred tax rollforward. Feeds into income tax compliance returns.'
+        };
+
+        document.querySelectorAll('.os-prov-step').forEach(step => {
+            step.addEventListener('mouseenter', () => {
+                const n = parseInt(step.dataset.ostep);
+                document.getElementById('os-prov-progress').style.width = (n / 6 * 100) + '%';
+                document.getElementById('os-prov-status').textContent = osProvDescriptions[n];
+                document.getElementById('os-prov-status').style.color = 'var(--white)';
+            });
+            step.addEventListener('mouseleave', () => {
+                document.getElementById('os-prov-status').textContent = 'Hover over each step to explore';
+                document.getElementById('os-prov-status').style.color = 'var(--gray)';
+            });
+        });
+
+    </script>
+</body>
+</html>
