@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Products | Tam Tran</title>
+    <title>Projects | Tam Tran</title>
     <link rel="stylesheet" href="../styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -121,10 +121,9 @@
         <div class="nav-container">
                         <ul class="nav-links">
                 <li><a href="../index.html">Home</a></li>
+                <li><a href="my-apps.html" class="active">Projects</a></li>
                 <li><a href="agentic-ai.html">Agentic AI</a></li>
-                <li><a href="tax-tech.html">Tax Technology</a></li>
-                <li><a href="finance-tech.html">Finance Technology</a></li>
-                <li><a href="my-apps.html" class="active">Products</a></li>
+                <li><a href="tax-tech.html">Tax/FinTech</a></li>
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -137,7 +136,7 @@
     <header class="page-header">
         <div class="particles" id="particles"></div>
         <div class="container" style="text-align: center;">
-            <h1 class="animate-slide-up">Products</h1>
+            <h1 class="animate-slide-up">Projects</h1>
         </div>
     </header>
 
@@ -149,6 +148,7 @@
                 <div class="product-tabs">
                     <button class="product-tab active" data-tab="provision">Provision Copilot</button>
                     <button class="product-tab" data-tab="rd">R&amp;D Skill</button>
+                    <button class="product-tab" data-tab="entity">Entity Org Chart</button>
                 </div>
             </div>
 
@@ -170,6 +170,20 @@
                     <p><strong>Replace manual employee interviews with an autonomous AI workflow.</strong> The R&amp;D Skill scores each document against the IRC &sect;41 four-part test, surfaces exclusion risks, and produces a structured qualification report &mdash; all without pulling engineers into hour-long interviews. Run agent teams for deep, interactive analysis or send high-volume batches through the API for a more token-efficient workflow. Use IRS audit guides, your own company playbook, or both as the knowledge base.</p>
                     <div class="product-media">
                         <img src="../R%26D%20Skill.gif" alt="R&amp;D Skill demo" loading="lazy">
+                    </div>
+                </article>
+            </div>
+
+            <!-- Entity Org Chart -->
+            <div class="product-panel" id="panel-entity">
+                <article class="product-card">
+                    <h2>Entity Org Chart</h2>
+                    <p>Draw your Entity Organization Chart by describing it.</p>
+                    <div class="product-media">
+                        <video autoplay loop muted playsinline preload="auto" style="display:block;width:100%;height:auto;">
+                            <source src="../entity-org-chart.mp4" type="video/mp4">
+                            Your browser cannot play this video.
+                        </video>
                     </div>
                 </article>
             </div>
@@ -204,7 +218,10 @@
                 document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.product-panel').forEach(p => p.classList.remove('active'));
                 tab.classList.add('active');
-                document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
+                const panel = document.getElementById('panel-' + tab.dataset.tab);
+                panel.classList.add('active');
+                const video = panel.querySelector('video');
+                if (video) { video.play().catch(() => {}); }
             });
         });
 
