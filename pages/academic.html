@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Projects | Tam Tran</title>
+    <title>Academics | Tam Tran</title>
     <link rel="stylesheet" href="../styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -107,22 +107,41 @@
             width: 100%;
             height: auto;
         }
+        .pdf-actions {
+            margin-top: 1.25rem;
+            font-size: 0.85rem;
+            color: var(--gray-light);
+        }
+        .pdf-actions a {
+            color: #7dd3fc;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .pdf-actions a:hover { text-decoration: underline; }
+        .pdf-frame {
+            display: block;
+            width: 100%;
+            height: 900px;
+            border: 0;
+            background: #1f2937;
+        }
         @media (max-width: 700px) {
             .product-card { padding: 1.75rem 1.5rem; }
             .product-card h2 { font-size: 1.25rem; }
             .product-card p { font-size: 0.875rem; }
             .product-suite-label { font-size: 1.25rem; }
             .product-tab { padding: 7px 14px; font-size: 0.8rem; }
+            .pdf-frame { height: 600px; }
         }
     </style>
 </head>
 <body>
     <nav class="navbar scrolled">
         <div class="nav-container">
-                        <ul class="nav-links">
+            <ul class="nav-links">
                 <li><a href="../index.html">Home</a></li>
-                <li><a href="my-apps.html" class="active">Projects</a></li>
-                <li><a href="academic.html">Academics</a></li>
+                <li><a href="my-apps.html">Projects</a></li>
+                <li><a href="academic.html" class="active">Academics</a></li>
                 <li><a href="agentic-ai.html">Agentic AI</a></li>
                 <li><a href="tax-tech.html">Tax/FinTech</a></li>
             </ul>
@@ -137,68 +156,51 @@
     <header class="page-header">
         <div class="particles" id="particles"></div>
         <div class="container" style="text-align: center;">
-            <h1 class="animate-slide-up">Projects</h1>
-            <p class="lead animate-slide-up delay-1" style="margin-left: auto; margin-right: auto; max-width: none;">Demos only &mdash; data and details are fictional, built with personal AI tools</p>
+            <h1 class="animate-slide-up">Academics</h1>
+            <p class="lead animate-slide-up delay-1" style="margin-left: auto; margin-right: auto; max-width: none;">Coursework, notes, and projects from my graduate studies</p>
         </div>
     </header>
 
     <section class="products-section">
         <div class="container">
-            <!-- Product heading + tabs -->
             <div class="animate-slide-up delay-1">
-                <h2 class="product-suite-label">Claw for Business Tax</h2>
+                <h2 class="product-suite-label">Master's in Computer Science &mdash; AI/ML</h2>
                 <div class="product-tabs">
-                    <button class="product-tab active" data-tab="provision">Provision Copilot</button>
-                    <button class="product-tab" data-tab="rd">R&amp;D Skill</button>
-                    <button class="product-tab" data-tab="entity">Entity Org Chart</button>
-                    <button class="product-tab" data-tab="partnership">Partnership</button>
+                    <button class="product-tab active" data-tab="alaff">Advanced Linear Algebra</button>
+                    <button class="product-tab" data-tab="dl">Deep Learning</button>
+                    <button class="product-tab" data-tab="ml">Machine Learning</button>
                 </div>
             </div>
 
-            <!-- Provision Copilot -->
-            <div class="product-panel active" id="panel-provision">
+            <!-- Advanced Linear Algebra -->
+            <div class="product-panel active" id="panel-alaff">
                 <article class="product-card animate-slide-up delay-1">
-                    <h2>Provision Copilot</h2>
-                    <p><strong>A tax provision that talks back.</strong> Provision Copilot gathers the data, walks you through the numbers, and pre-answers the review comments that repeat every quarter &mdash; with follow-up questions handled on the spot. Every experienced reviewer expects the same thing: the preparer knows the data, tells the story, and clears routine comments before the meeting. Provision Copilot does exactly that.</p>
+                    <h2>Advanced Linear Algebra: Foundations to Frontiers</h2>
+                    <p>Course notes from UT Austin's <strong>Advanced Linear Algebra: Foundations to Frontiers (ALAFF)</strong> &mdash; scroll the embedded PDF below, or open it full-screen in a new tab.</p>
                     <div class="product-media">
-                        <img src="../Provision%20Copilot.gif" alt="Provision Copilot demo" loading="lazy">
+                        <iframe class="pdf-frame" src="../notes/ALAFF_Notes.pdf#view=FitH" title="ALAFF Notes"></iframe>
                     </div>
+                    <p class="pdf-actions">
+                        <a href="../notes/ALAFF_Notes.pdf" target="_blank" rel="noopener">Open in new tab &nearr;</a>
+                        &nbsp;&middot;&nbsp;
+                        <a href="../notes/ALAFF_Notes.pdf" download>Download PDF</a>
+                    </p>
                 </article>
             </div>
 
-            <!-- R&D Skill -->
-            <div class="product-panel" id="panel-rd">
+            <!-- Deep Learning -->
+            <div class="product-panel" id="panel-dl">
                 <article class="product-card">
-                    <h2>Research &amp; Development Tax Credits Skill</h2>
-                    <p><strong>Replace manual employee interviews with an autonomous AI workflow.</strong> The R&amp;D Skill scores each document against the IRC &sect;41 four-part test, surfaces exclusion risks, and produces a structured qualification report &mdash; all without pulling engineers into hour-long interviews. Run agent teams for deep, interactive analysis or send high-volume batches through the API for a more token-efficient workflow. Use IRS audit guides, your own company playbook, or both as the knowledge base.</p>
-                    <div class="product-media">
-                        <img src="../R%26D%20Skill.gif" alt="R&amp;D Skill demo" loading="lazy">
-                    </div>
+                    <h2>Deep Learning</h2>
+                    <p>Notes and coursework coming soon.</p>
                 </article>
             </div>
 
-            <!-- Entity Org Chart -->
-            <div class="product-panel" id="panel-entity">
+            <!-- Machine Learning -->
+            <div class="product-panel" id="panel-ml">
                 <article class="product-card">
-                    <h2>Entity Org Chart</h2>
-                    <p>Draw your Entity Organization Chart by describing it.</p>
-                    <div class="product-media">
-                        <video autoplay loop muted playsinline preload="auto" style="display:block;width:100%;height:auto;">
-                            <source src="../entity-org-chart.mp4" type="video/mp4">
-                            Your browser cannot play this video.
-                        </video>
-                    </div>
-                </article>
-            </div>
-
-            <!-- Partnership -->
-            <div class="product-panel" id="panel-partnership">
-                <article class="product-card">
-                    <h2>Partnership Copilot</h2>
-                    <p>An AI copilot that tracks partnership allocation and understand &sect;704(b), &sect;704(c) methods or &sect;743(b) adjustments.</p>
-                    <div class="product-media">
-                        <img src="../Partnership.gif" alt="Partnership Copilot demo" loading="lazy">
-                    </div>
+                    <h2>Machine Learning</h2>
+                    <p>Notes and coursework coming soon.</p>
                 </article>
             </div>
         </div>
@@ -226,16 +228,12 @@
             hamburger.classList.toggle('active');
         });
 
-        // Product tab switching
         document.querySelectorAll('.product-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
                 document.querySelectorAll('.product-panel').forEach(p => p.classList.remove('active'));
                 tab.classList.add('active');
-                const panel = document.getElementById('panel-' + tab.dataset.tab);
-                panel.classList.add('active');
-                const video = panel.querySelector('video');
-                if (video) { video.play().catch(() => {}); }
+                document.getElementById('panel-' + tab.dataset.tab).classList.add('active');
             });
         });
 
