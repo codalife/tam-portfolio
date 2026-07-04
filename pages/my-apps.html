@@ -148,16 +148,34 @@
             <div class="animate-slide-up delay-1">
                 <h2 class="product-suite-label">Claw for Business Tax</h2>
                 <div class="product-tabs">
-                    <button class="product-tab active" data-tab="provision">Provision Copilot</button>
+                    <button class="product-tab active" data-tab="tp-audit">TP Audit Defense</button>
+                    <button class="product-tab" data-tab="provision">Provision Copilot</button>
                     <button class="product-tab" data-tab="rd">R&amp;D Skill</button>
                     <button class="product-tab" data-tab="entity">Entity Org Chart</button>
                     <button class="product-tab" data-tab="partnership">Partnership</button>
                 </div>
             </div>
 
-            <!-- Provision Copilot -->
-            <div class="product-panel active" id="panel-provision">
+            <!-- TP Audit Defense -->
+            <div class="product-panel active" id="panel-tp-audit">
                 <article class="product-card animate-slide-up delay-1">
+                    <h2>TP Audit Defense</h2>
+                    <p style="margin-bottom: 1rem;"><strong>At the AI Engineer World&rsquo;s Fair Hackathon, I built a self-improving AI voice agent &mdash; in 2 days &mdash; and made it a replica of me.</strong> When a tax authority challenges a company&rsquo;s position, she builds the case to defend it.</p>
+                    <p style="margin-bottom: 1rem;">The interesting part is how she learns. I don&rsquo;t write her playbook &mdash; I coach her by video calls, the way you&rsquo;d train a junior associate. Every voice lesson becomes a structured rule she stores in memory and feeds back into her own prompt. In parallel, an independent LLM judge scores every defense she writes against a fixed rubric, so I can watch her get measurably stronger each round.</p>
+                    <p style="margin-bottom: 1rem;">What I didn&rsquo;t expect: the rules she learned started generalizing to cases I never taught her.</p>
+                    <p>Built on LiveKit + Gemini, with a Tavus avatar so she looks like me &mdash; I couldn&rsquo;t get the voice cloning working in time, so that&rsquo;s first on the list for v2. (For the hackathon, the tax knowledge base was AI-generated from the perspective of a global fintech company.)</p>
+                    <div class="product-media">
+                        <video controls playsinline preload="metadata" style="display:block;width:100%;height:auto;">
+                            <source src="../Tax%20Audit%20Defense%20-%20Self%20Improving%20Agent.mp4" type="video/mp4">
+                            Your browser cannot play this video.
+                        </video>
+                    </div>
+                </article>
+            </div>
+
+            <!-- Provision Copilot -->
+            <div class="product-panel" id="panel-provision">
+                <article class="product-card">
                     <h2>Provision Copilot</h2>
                     <p><strong>A tax provision that talks back.</strong> Provision Copilot gathers the data, walks you through the numbers, and pre-answers the review comments that repeat every quarter &mdash; with follow-up questions handled on the spot. Every experienced reviewer expects the same thing: the preparer knows the data, tells the story, and clears routine comments before the meeting. Provision Copilot does exactly that.</p>
                     <div class="product-media">
@@ -230,12 +248,16 @@
         document.querySelectorAll('.product-tab').forEach(tab => {
             tab.addEventListener('click', () => {
                 document.querySelectorAll('.product-tab').forEach(t => t.classList.remove('active'));
-                document.querySelectorAll('.product-panel').forEach(p => p.classList.remove('active'));
+                document.querySelectorAll('.product-panel').forEach(p => {
+                    p.classList.remove('active');
+                    const v = p.querySelector('video');
+                    if (v) v.pause();
+                });
                 tab.classList.add('active');
                 const panel = document.getElementById('panel-' + tab.dataset.tab);
                 panel.classList.add('active');
                 const video = panel.querySelector('video');
-                if (video) { video.play().catch(() => {}); }
+                if (video && video.muted) { video.play().catch(() => {}); }
             });
         });
 
